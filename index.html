@@ -358,11 +358,10 @@
     const auth = getAuth(app);
     const db = getDatabase(app);
 
-    // Instancia Secundaria de Auth para crear usuarios sin desconectar al admin
     const secondaryApp = initializeApp(firebaseConfig, "Secondary");
     const secondaryAuth = getAuth(secondaryApp);
 
-    // Diccionario de Respaldo (Si Firebase está vacío, usa esto y lo migra)
+    // USUARIOS PRE-CREADOS (Respaldo)
     const ROLES_FALLBACK = {
         'belleza@gmail.com': { role: 'user', sede: 'Belleza Principal' },
         'beauty@gmail.com': { role: 'user', sede: 'Beauty Principal' },
@@ -372,10 +371,13 @@
         'jose@gmail.com': { role: 'admin', sede: 'Todas' }
     };
 
+    // SEDES PRE-CREADAS (Constante inamovible para garantizar que siempre salgan)
+    const SEDES_DEFAULT = ["Belleza Principal", "Beauty Principal", "Gran Bazar", "Libertador"];
+
     let currentUserProfile = null;
     let localDB = { bs: [], cuadre: [] };
     let editandoBsID = null;
-    let sedes = []; // Ahora es Dinámico
+    let sedes = [...SEDES_DEFAULT]; // Inicializamos con las 4 por defecto
     
     const fmtBs = (n) => "Bs. " + n.toLocaleString('es-VE', { minimumFractionDigits: 2 });
     const fmtUsd = (n) => "$ " + n.toLocaleString('en-US', { minimumFractionDigits: 2 });
@@ -404,23 +406,18 @@
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             const email = user.email.toLowerCase();
-            const emailKey = email.replace(/\./g, '_'); // Firebase no permite puntos en las llaves
+            const emailKey = email.replace(/\./g, '_'); 
             
             showLoader(true);
-            // Buscar rol en base de datos
             let roleSnap = await get(ref(db, `vpm/roles/${emailKey}`));
             let profile = roleSnap.val();
 
-            // Si no existe, migramos los datos del respaldo antiguo a Firebase
             if (!profile) {
                 profile = ROLES_FALLBACK[email];
                 if (profile) {
                     await set(ref(db, `vpm/roles/${emailKey}`), profile);
                 } else {
-                    showLoader(false);
-                    alert("Usuario no autorizado por el administrador.");
-                    signOut(auth);
-                    return;
+                    showLoader(false); alert("Usuario no autorizado por el administrador."); signOut(auth); return;
                 }
             }
 
@@ -465,16 +462,14 @@
         const cuadreRef = ref(db, 'vpm/cuadre');
         const sedesRef = ref(db, 'vpm/sedes_list');
 
-        // Escuchar y actualizar Sedes Dinámicamente
+        // LECTURA DE SEDES: Combina las 4 por defecto con las nuevas de la base de datos
         onValue(sedesRef, (snapshot) => {
+            let dbSedes = [];
             if(snapshot.exists()) {
-                sedes = [];
-                snapshot.forEach(child => sedes.push(child.val()));
-            } else {
-                // Generar sedes por defecto si la base de datos es nueva
-                sedes = ["Belleza Principal", "Beauty Principal", "Gran Bazar", "Libertador"];
-                sedes.forEach(s => push(ref(db, 'vpm/sedes_list'), s));
+                snapshot.forEach(child => dbSedes.push(child.val()));
             }
+            // Uso de Set para evitar que se dupliquen si ya estaban en la BD
+            sedes = [...new Set([...SEDES_DEFAULT, ...dbSedes])];
             actualizarSelectsSedes();
             renderUI();
         });
@@ -497,16 +492,14 @@
         document.getElementById('bs-sede').innerHTML = htmlSedes;
         document.getElementById('c-sede').innerHTML = htmlSedes;
         document.getElementById('filtro-sede').innerHTML = `<option value="Todas">Todas las Sedes</option>` + htmlSedes;
-        document.getElementById('nuevo-usu-sede').innerHTML = htmlSedes; // Para el modal
+        document.getElementById('nuevo-usu-sede').innerHTML = htmlSedes;
         
-        // Reforzar bloqueos para usuarios locales
         if (currentUserProfile && currentUserProfile.role !== 'admin') {
             document.getElementById('bs-sede').value = currentUserProfile.sede;
             document.getElementById('filtro-sede').value = currentUserProfile.sede;
         }
     }
 
-    // --- LÓGICA DE MODALES DE ADMINISTRADOR ---
     window.abrirModalSedes = () => {
         document.getElementById('modal-overlay').style.display = 'flex';
         document.getElementById('modal-sede').classList.remove('hidden');
@@ -553,10 +546,7 @@
 
         showLoader(true);
         try {
-            // Crea el usuario usando la app secundaria (así no saca al admin de su sesión)
             await createUserWithEmailAndPassword(secondaryAuth, email, password);
-            
-            // Registra el rol en la base de datos general
             const emailKey = email.replace(/\./g, '_');
             await set(ref(db, `vpm/roles/${emailKey}`), { role: rol, sede: sede, email: email });
             
@@ -564,8 +554,6 @@
             document.getElementById('nuevo-usu-email').value = '';
             document.getElementById('nuevo-usu-pass').value = '';
             cerrarModales();
-            
-            // Cierra la sesión secundaria
             await signOut(secondaryAuth);
         } catch (error) {
             alert("❌ Error al crear usuario: " + error.message);
@@ -573,7 +561,6 @@
         showLoader(false);
     };
 
-    // --- LÓGICA DE TRANSACCIONES Y NEGOCIO ---
     window.registrarBs = () => {
         const montoI = document.getElementById('bs-monto');
         const refI = document.getElementById('bs-ref');
@@ -660,6 +647,7 @@
         let tReg = 0, tPto = 0, tUsd = 0;
         const resDiv = document.getElementById('resumen-final'); resDiv.innerHTML = '';
         
+        // Iteramos sobre el arreglo 'sedes' que ahora tiene aseguradas las 4 sedes originales
         sedes.forEach(s => {
             const trSede = localDB.bs.filter(x => x.sede === s);
             const rS = trSede.reduce((a,b) => a+b.monto, 0);
