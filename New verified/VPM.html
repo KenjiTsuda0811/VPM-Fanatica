@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caja Pro - Control con Reinicio</title>
+    <link rel="icon" href="https://fav.farm/📊" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        :root { --primary: #2c3e50; --success: #27ae60; --info: #3498db; --warning: #f39c12; --danger: #d63031; --accent: #16a085; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding: 15px; overflow: hidden; height: 100vh; box-sizing: border-box; }
+        
+        .main-layout { display: grid; grid-template-columns: 1fr 1fr 420px; gap: 20px; height: 100%; max-width: 1800px; margin: 0 auto; }
+        .panel { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; border-top: 6px solid var(--primary); }
+        .panel-ingresos { border-top-color: var(--success); }
+        .panel-cuadre { border-top-color: var(--accent); }
+        .panel-resumen { border-top-color: var(--info); }
+        
+        h2 { margin: 0 0 15px 0; color: var(--primary); font-size: 1.1rem; text-align: center; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 800; }
+        label { font-size: 11px; font-weight: 700; color: #7f8c8d; display: block; margin-bottom: 4px; text-transform: uppercase; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #dfe6e9; border-radius: 8px; box-sizing: border-box; font-size: 14px; margin-bottom: 12px; }
+        
+        /* ✅ BOTÓN PEQUEÑO OPTIMIZADO */
+        .btn-pegar-unico {
+            width: 100%; padding: 8px 12px; background: linear-gradient(135deg, #f39c12, #e67e22); 
+            color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; 
+            font-size: 13px; text-transform: uppercase; transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(243, 156, 18, 0.3); margin-bottom: 4px;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .btn-pegar-unico:hover { 
+            background: linear-gradient(135deg, #e67e22, #d35400); 
+            transform: translateY(-1px); box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+        .btn-pegar-unico:active { transform: translateY(0); }
+        
+        .btn { width: 100%; padding: 12px; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; text-transform: uppercase; transition: 0.3s; }
+        .btn-ingreso { background: var(--success); }
+        .btn-cuadre { background: var(--accent); }
+        .btn-pdf { background: #e74c3c; margin-top: 10px; box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2); }
+        .btn-pdf:hover { background: #c0392b; }
+        .btn-banco { background: linear-gradient(135deg, #1e40af, #3b82f6); margin-top: 10px; box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3); }
+        .btn-banco:hover { background: linear-gradient(135deg, #1e3a8a, #2563eb); }
+        .btn-reset { background: #95a5a6; margin-top: 8px; font-size: 11px; padding: 8px; opacity: 0.8; }
+        .btn-reset:hover { background: #7f8c8d; opacity: 1; }
+
+        .filtros-box { background: #f8f9fa; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #eee; }
+        .filtros-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .filtros-grid input, .filtros-grid select { margin-bottom: 0; font-size: 12px; padding: 8px; }
+
+        .scroll-area { flex-grow: 1; overflow-y: auto; padding-right: 8px; }
+        .item { background: #fff; border: 1px solid #edf2f7; padding: 12px; margin-bottom: 10px; border-radius: 10px; position: relative; font-size: 14px; border-left: 5px solid #ccc; }
+        .item-bs { border-left-color: var(--success); }
+        .item-cuadre { border-left-color: var(--accent); }
+
+        .item-meta { position: absolute; right: 10px; bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .btn-edit { background: #fdf0d5; color: #d4a017; border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 14px; }
+        .time-label { font-size: 11px; color: #b2bec3; font-weight: 600; }
+
+        .total-box { padding: 12px; border-radius: 12px; text-align: center; color: white; margin-bottom: 8px; }
+        .bg-reg { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+        .bg-pto { background: linear-gradient(135deg, #2980b9, #3498db); }
+        .bg-usd { background: linear-gradient(135deg, #8e44ad, #9b59b6); }
+        
+        .resumen-sede-card { background: white; border: 1px solid #f0f0f0; padding: 12px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .badge-cantidad { background: var(--info); color: white; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; }
+        
+        .alert-critica { background: #fff5f5; color: #d63031; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 800; display: none; margin-bottom: 15px; border: 2px solid #d63031; text-align: center; }
+        
+        .pegado-exito { background: #d4edda !important; border-color: #c3e6cb !important; color: #155724; animation: pulse 0.6s; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+        /* ✅ INDICADOR DE GUARDADO */
+        #save-status {
+            position: fixed; top: 20px; left: 20px; z-index: 9999;
+            background: #10b981; color: white; padding: 8px 15px; 
+            border-radius: 20px; font-size: 13px; font-weight: 600;
+            box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* TOAST AUTOSAVE */
+        #auto-save-toast {
+            position: fixed; top: 70px; right: 20px; z-index: 9999;
+            background: linear-gradient(135deg, #10b981, #34d399); color: white;
+            padding: 15px 25px; border-radius: 15px; font-weight: 700;
+            box-shadow: 0 10px 30px rgba(16,185,129,0.4);
+            transform: translateX(400px); transition: all 0.4s ease;
+            font-family: 'Segoe UI', sans-serif; font-size: 14px;
+            border-left: 5px solid #059669;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-layout">
+    <div class="panel panel-ingresos">
+        <h2>Transacciones Bolívares</h2>
+        <div id="msg-error-global" class="alert-critica"></div>
+        
+        <label>Monto</label>
+        <input type="text" id="bs-monto" placeholder="0,00">
+        
+        <label>Referencia</label>
+        <input type="text" id="bs-ref" placeholder="Ej: 8844">
+        
+        <button class="btn-pegar-unico" onclick="pegarTodoDesdePortapapeles()">
+            📋 PEGAR
+        </button>
+        
+        <label>Sede</label>
+        <select id="bs-sede">
+            <option>Belleza Principal</option><option>Beauty Principal</option><option>Gran Bazar</option><option>Libertador</option>
+        </select>
+        <button id="btn-bs" class="btn btn-ingreso" onclick="registrarBs()">GUARDAR REGISTRO</button>
+        <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
+        <div class="filtros-box">
+            <div class="filtros-grid">
+                <select id="filtro-sede" onchange="actualizarUI()">
+                    <option value="Todas">Todas las Sedes</option>
+                    <option>Belleza Principal</option><option>Beauty Principal</option><option>Gran Bazar</option><option>Libertador</option>
+                </select>
+                <input type="text" id="buscador" onkeyup="actualizarUI()" placeholder="Buscar Ref...">
+            </div>
+        </div>
+        <div class="scroll-area" id="lista-bs"></div>
+    </div>
+
+    <div class="panel panel-cuadre">
+        <h2>Cierres Punto / USD</h2>
+        <div style="background: #fcfcfc; padding: 15px; border-radius: 12px; border: 1px solid #edf2f7; margin-bottom: 15px;">
+            <label>Tipo</label>
+            <select id="c-tipo">
+                <option value="Punto">Cierre de Punto (Bs)</option>
+                <option value="Dólares">Efectivo ($)</option>
+            </select>
+            <label>Monto Total</label>
+            <input type="text" id="c-monto" placeholder="0,00">
+            <label>Sede</label>
+            <select id="c-sede">
+                <option>Belleza Principal</option><option>Beauty Principal</option><option>Gran Bazar</option><option>Libertador</option>
+            </select>
+            <button id="btn-cuadre" class="btn btn-cuadre" onclick="registrarCuadre()">REGISTRAR CIERRE</button>
+        </div>
+        <div class="scroll-area" id="lista-cuadre"></div>
+    </div>
+
+    <div class="panel panel-resumen">
+        <h2>📊 Resumen Consolidado</h2>
+        <div class="total-box bg-reg"><small>TOTAL REFERENCIAS (BS)</small><div id="tot-reg" style="font-size: 1.3rem; font-weight: 900;">Bs. 0,00</div></div>
+        <div class="total-box bg-pto"><small>TOTAL CIERRE PUNTOS (BS)</small><div id="tot-pto" style="font-size: 1.3rem; font-weight: 900;">Bs. 0,00</div></div>
+        <div class="total-box bg-usd"><small>TOTAL EFECTIVO (USD)</small><div id="tot-usd" style="font-size: 1.3rem; font-weight: 900;">$ 0.00</div></div>
+        <div class="scroll-area" id="resumen-final"></div>
+        
+        <button class="btn btn-banco" onclick="abrirBanco()">🏦 Banco</button>
+        <button class="btn btn-pdf" onclick="exportarPDF()">DESCARGAR REPORTE PDF</button>
+        <button class="btn btn-reset" onclick="reiniciarDia()">🗑️ REINICIAR DÍA / LIMPIAR TODO</button>
+    </div>
+</div>
+
+<script>
+    const STORAGE_KEY = 'DATOS_CAJA_PERMANENTE_GLOBAL';
+    const sedes = ["Belleza Principal", "Beauty Principal", "Gran Bazar", "Libertador"];
+    const fmtBs = (n) => "Bs. " + n.toLocaleString('es-VE', { minimumFractionDigits: 2 });
+    const fmtUsd = (n) => "$ " + n.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    let editandoBsID = null;
+    let errorTimeout = null;
+    let autoSaveTimer = null;
+    let saveStatusElement = null;
+
+    // 🛡️ SISTEMA DE GUARDADO ROBUSTO
+    document.addEventListener('DOMContentLoaded', function() {
+        // Crear indicador de estado
+        saveStatusElement = document.createElement('div');
+        saveStatusElement.id = 'save-status';
+        saveStatusElement.style.cssText = `
+            position: fixed; top: 20px; left: 20px; z-index: 9999;
+            background: #10b981; color: white; padding: 8px 15px; 
+            border-radius: 20px; font-size: 13px; font-weight: 600;
+            box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+            font-family: 'Segoe UI', sans-serif;
+        `;
+        saveStatusElement.textContent = '💾 Cargando...';
+        document.body.appendChild(saveStatusElement);
+        
+        actualizarUI();
+        startRobustSave();
+    });
+
+    // ✅ GUARDADO AUTOMÁTICO CADA 10 SEGUNDOS
+    function startRobustSave() {
+        saveAllData();
+        updateSaveStatus('💾 Guardado inicial');
+        
+        autoSaveTimer = setInterval(() => {
+            saveAllData();
+            updateSaveStatus('💾 Auto-guardado');
+        }, 60000);
+        
+        window.addEventListener('beforeunload', saveAllData);
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                saveAllData();
+                updateSaveStatus('💾 Guardado al salir');
+            }
+        });
+    }
+
+    // ✅ FUNCIÓN DE GUARDADO ULTRA-ROBUSTO
+    function saveAllData() {
+        try {
+            const db = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { bs: [], cuadre: [] };
+            const saveData = {
+                bs: db.bs || [],
+                cuadre: db.cuadre || [],
+                timestamp: Date.now(),
+                version: 'caja-pro-v2'
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(saveData));
+            return true;
+        } catch(e) {
+            console.error('❌ Error guardando:', e);
+            updateSaveStatus('❌ Error guardado');
+            return false;
+        }
+    }
+
+    // ✅ ACTUALIZAR ESTADO VISUAL
+    function updateSaveStatus(message) {
+        if (saveStatusElement) {
+            saveStatusElement.textContent = message;
+            saveStatusElement.style.background = message.includes('Error') ? '#ef4444' : '#10b981';
+            if (!message.includes('Error')) {
+                setTimeout(() => {
+                    saveStatusElement.textContent = '💾 Guardado';
+                    saveStatusElement.style.background = '#10b981';
+                }, 3000);
+            }
+        }
+    }
+
+    // ✅ FIX Clipboard
+    async function pegarTodoDesdePortapapeles() {
+        try {
+            const texto = await navigator.clipboard.readText();
+            procesarTextoBanesco(texto);
+        } catch(e) {
+            mostrarErrorClipboard();
+        }
+    }
+
+    function mostrarErrorClipboard() {
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Ctrl+V manual';
+        btn.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.background = '';
+        }, 2000);
+    }
+    
+    function procesarTextoBanesco(textoCompleto) {
+        document.getElementById('bs-ref').value = '';
+        document.getElementById('bs-monto').value = '';
+        
+        let refEncontrada = null;
+        let montoEncontrado = null;
+        
+        const lineas = textoCompleto.split(/[\r\n]+/).map(l => l.trim()).filter(l => l);
+        if (lineas.length >= 2) {
+            const primeraLinea = lineas[0];
+            const segundaLinea = lineas[1];
+            if (/^\d{8,}$/.test(primeraLinea)) {
+                refEncontrada = primeraLinea;
+            }
+            if ((segundaLinea.includes('.') || segundaLinea.includes(',')) && !/^\d{8,}$/.test(segundaLinea)) {
+                montoEncontrado = segundaLinea;
+            }
+        }
+        
+        if (!refEncontrada || !montoEncontrado) {
+            const textoLimpio = textoCompleto.replace(/[\r\n]+/g, ' ').trim();
+            const partes = textoLimpio.split(/\s+/).filter(p => p);
+            if (partes.length >= 2) {
+                const primeraParte = partes[0];
+                const segundaParte = partes[1];
+                if (/^\d{8,}$/.test(primeraParte) && !refEncontrada) {
+                    refEncontrada = primeraParte;
+                }
+                if ((segundaParte.includes('.') || segundaParte.includes(',')) && !/^\d{8,}$/.test(segundaParte) && !montoEncontrado) {
+                    montoEncontrado = segundaParte;
+                }
+            }
+        }
+        
+        if (refEncontrada) {
+            document.getElementById('bs-ref').value = refEncontrada;
+            document.getElementById('bs-ref').classList.add('pegado-exito');
+        }
+        if (montoEncontrado) {
+            document.getElementById('bs-monto').value = montoEncontrado;
+            document.getElementById('bs-monto').classList.add('pegado-exito');
+        }
+        
+        const exito = (refEncontrada ? 1 : 0) + (montoEncontrado ? 1 : 0);
+        feedbackExito(exito);
+    }
+    
+    function feedbackExito(contador) {
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `✅ ${contador}/2`;
+        btn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+        
+        setTimeout(() => {
+            document.getElementById('bs-ref')?.classList.remove('pegado-exito');
+            document.getElementById('bs-monto')?.classList.remove('pegado-exito');
+            btn.innerHTML = originalText;
+            btn.style.background = '';
+            if (contador === 2) {
+                setTimeout(() => {
+                    document.getElementById('btn-bs').scrollIntoView({ behavior: 'smooth' });
+                }, 500);
+            }
+        }, 2000);
+        
+        if (contador === 0) {
+            alert('📋 Formato Banesco:\n"60610518732 1.479,00"\no\n"60610518732\n1.479,00"');
+        }
+    }
+
+    function abrirBanco() {
+        window.open('https://www.banesconline.com/Mantis/WebSite/login.aspx', 'banesco', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+    }
+
+    function parsearMontoVenezolano(texto) {
+        return parseFloat(texto.toString().replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+    }
+
+    // ✅ REGISTRAR CON GUARDADO AUTOMÁTICO
+    function registrarBs() {
+        const montoI = document.getElementById('bs-monto');
+        const refI = document.getElementById('bs-ref');
+        const monto = parsearMontoVenezolano(montoI.value);
+        const ref = refI.value.trim();
+        const sede = document.getElementById('bs-sede').value;
+        const msgError = document.getElementById('msg-error-global');
+        
+        if (!monto || !ref) return alert("Faltan datos.");
+
+        let db = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { bs: [], cuadre: [] };
+
+        const duplicado = db.bs.find(x => x.ref === ref && x.id !== editandoBsID);
+        if (duplicado) {
+            msgError.innerText = `❌ ERROR: LA REFERENCIA ${ref} YA EXISTE EN: ${duplicado.sede.toUpperCase()}`;
+            msgError.style.display = 'block';
+            if(errorTimeout) clearTimeout(errorTimeout);
+            errorTimeout = setTimeout(() => msgError.style.display = 'none', 10000);
+            return;
+        }
+
+        if (editandoBsID !== null) {
+            db.bs = db.bs.map(i => i.id === editandoBsID ? { ...i, monto, ref, sede } : i);
+            editandoBsID = null;
+            document.getElementById('btn-bs').innerText = "GUARDAR REGISTRO";
+        } else {
+            const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            db.bs.unshift({ id: Date.now(), monto, ref, sede, hora });
+        }
+        
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+        montoI.value = ''; refI.value = ''; msgError.style.display = 'none';
+        updateSaveStatus('💾 Registro BS guardado');
+        actualizarUI();
+    }
+
+    function registrarCuadre() {
+        const montoI = document.getElementById('c-monto');
+        const tipo = document.getElementById('c-tipo').value;
+        const monto = parsearMontoVenezolano(montoI.value);
+        const sede = document.getElementById('c-sede').value;
+        if (isNaN(monto)) return;
+        let db = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { bs: [], cuadre: [] };
+        db.cuadre.unshift({ id: Date.now(), tipo, monto, sede });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+        montoI.value = '';
+        updateSaveStatus('💾 Cierre guardado');
+        actualizarUI();
+    }
+
+    function actualizarUI() {
+        const db = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { bs: [], cuadre: [] };
+        const fSede = document.getElementById('filtro-sede').value;
+        const fRef = document.getElementById('buscador').value.toLowerCase();
+
+        const filtrados = db.bs.filter(i => (fSede === "Todas" || i.sede === fSede) && i.ref.toLowerCase().includes(fRef));
+        
+        document.getElementById('lista-bs').innerHTML = filtrados.map(i => `
+            <div class="item item-bs">
+                <strong>${i.sede}</strong><br><span style="font-weight:bold; color:var(--success)">${fmtBs(i.monto)}</span><br><small>Ref: ${i.ref}</small>
+                <div class="item-meta"><span class="time-label">${i.hora}</span><button class="btn-edit" onclick="gestionarBs(${i.id})">✏️</button></div>
+            </div>`).join('');
+
+        document.getElementById('lista-cuadre').innerHTML = db.cuadre.map(i => `
+            <div class="item item-cuadre">
+                <strong>${i.sede}</strong><br>${i.tipo === 'Punto' ? 'Cierre Punto' : 'Efectivo'}: <b>${i.tipo === 'Dólares' ? fmtUsd(i.monto) : fmtBs(i.monto)}</b>
+                <div class="item-meta"><button class="btn-edit" style="color:var(--danger)" onclick="eliminarC(${i.id})">🗑️</button></div>
+            </div>`).join('');
+        
+        let tReg = 0, tPto = 0, tUsd = 0;
+        const resDiv = document.getElementById('resumen-final'); resDiv.innerHTML = '';
+        
+        sedes.forEach(s => {
+            const trSede = db.bs.filter(x => x.sede === s);
+            const rS = trSede.reduce((a,b) => a+b.monto, 0);
+            const pS = db.cuadre.filter(x => x.sede === s && x.tipo === 'Punto').reduce((a,b) => a+b.monto, 0);
+            const uS = db.cuadre.filter(x => x.sede === s && x.tipo === 'Dólares').reduce((a,b) => a+b.monto, 0);
+            tReg += rS; tPto += pS; tUsd += uS;
+            
+            resDiv.innerHTML += `
+                <div class="resumen-sede-card">
+                    <div style="flex:1">
+                        <strong style="color:var(--primary)">${s}</strong>
+                        <div style="font-size:11px; color:#666; margin-top:4px;">
+                            Ref: ${fmtBs(rS)} | <b>Cierre Pto: ${fmtBs(pS)}</b><br>
+                            Efectivo: <span style="color:var(--accent); font-weight:bold">${fmtUsd(uS)}</span>
+                        </div>
+                    </div>
+                    <div class="badge-cantidad">${trSede.length}</div>
+                </div>`;
+        });
+        document.getElementById('tot-reg').innerText = fmtBs(tReg);
+        document.getElementById('tot-pto').innerText = fmtBs(tPto);
+        document.getElementById('tot-usd').innerText = fmtUsd(tUsd);
+    }
+
+    function gestionarBs(id) {
+        const db = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        const i = db.bs.find(x => x.id === id);
+        if (confirm(`Referencia: ${i.ref}\nOK para EDITAR / Cancelar para ELIMINAR`)) {
+            document.getElementById('bs-monto').value = i.monto.toLocaleString('es-VE', { minimumFractionDigits: 2 });
+            document.getElementById('bs-ref').value = i.ref;
+            document.getElementById('bs-sede').value = i.sede;
+            editandoBsID = id;
+            document.getElementById('btn-bs').innerText = "ACTUALIZAR REGISTRO";
+            window.scrollTo(0,0);
+        } else if (confirm("¿Eliminar registro?")) {
+            db.bs = db.bs.filter(x => x.id !== id);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+            saveAllData();
+            actualizarUI();
+        }
+    }
+
+    function eliminarC(id) {
+        if (confirm("¿Eliminar cierre?")) {
+            let db = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            db.cuadre = db.cuadre.filter(x => x.id !== id);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+            saveAllData();
+            actualizarUI();
+        }
+    }
+
+    // ✅ REINICIAR SOLO CAJA (NO todo localStorage)
+    function reiniciarDia() {
+        if (confirm("⚠️ ¿ESTÁS SEGURO?\nEsto borrará TODAS las transacciones y cierres de HOY.")) {
+            if (confirm("🔒 CONFIRMACIÓN FINAL: ¿Realmente quieres vaciar la caja?")) {
+                localStorage.removeItem(STORAGE_KEY);
+                actualizarUI();
+                updateSaveStatus('🗑️ Día reiniciado');
+                alert("✅ Día reiniciado. Caja vacía.");
+            }
+        }
+    }
+
+    function exportarPDF() {
+        if (typeof window.jspdf === 'undefined') {
+            alert('Error: jsPDF no cargó. Verifica conexión.');
+            return;
+        }
+        
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const db = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { bs: [], cuadre: [] };
+        
+        doc.setFontSize(18);
+        doc.setTextColor(44, 62, 80);
+        doc.text("REPORTE CONSOLIDADO DE CAJA", 14, 20);
+        
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text(`Generado: ${new Date().toLocaleString('es-VE')}`, 14, 28);
+
+        doc.setFontSize(14);
+        doc.setTextColor(52, 152, 219);
+        doc.text("RESUMEN GENERAL POR SEDE", 14, 40);
+        
+        const resumenCuerpo = sedes.map(s => {
+            const rS = db.bs.filter(x => x.sede === s).reduce((a,b) => a+b.monto, 0);
+            const pS = db.cuadre.filter(x => x.sede === s && x.tipo === 'Punto').reduce((a,b) => a+b.monto, 0);
+            const uS = db.cuadre.filter(x => x.sede === s && x.tipo === 'Dólares').reduce((a,b) => a+b.monto, 0);
+            return [s, fmtBs(rS), fmtBs(pS), fmtUsd(uS)];
+        });
+
+        doc.autoTable({
+            startY: 50,
+            head: [['Sede', 'Total Refs (Bs)', 'Cierre Punto (Bs)', 'Efectivo ($)']],
+            body: resumenCuerpo,
+            theme: 'striped',
+            headStyles: { fillColor: [52, 152, 219] },
+            styles: { fontSize: 8 }
+        });
+
+        let finalY = doc.lastAutoTable.finalY + 15;
+        doc.setFontSize(14);
+        doc.setTextColor(39, 174, 96);
+        doc.text("DETALLE DE TRANSACCIONES (BS)", 14, finalY);
+
+        doc.autoTable({
+            startY: finalY + 8,
+            head: [['Sede', 'Hora', 'Referencia', 'Monto']],
+            body: db.bs.map(x => [x.sede, x.hora, x.ref, fmtBs(x.monto)]),
+            headStyles: { fillColor: [39, 174, 96] },
+            styles: { fontSize: 7 },
+            columnStyles: {
+                0: { cellWidth: 40 },
+                1: { cellWidth: 25 },
+                2: { cellWidth: 50 },
+                3: { cellWidth: 45 }
+            }
+        });
+
+        if (doc.lastAutoTable.finalY > 270) {
+            doc.addPage();
+        }
+
+        window.open(doc.output('bloburl'), '_blank');
+    }
+</script>
+</body>
+</html>
