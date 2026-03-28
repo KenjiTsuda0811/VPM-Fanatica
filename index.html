@@ -25,136 +25,57 @@
             padding: 15px; overflow: hidden; height: 100vh; box-sizing: border-box; color: var(--text-main);
         }
         
-        /* --- INICIO DE SESIÓN PREMIUM --- */
+        /* --- ESTILOS PAGINA DE INICIO (LOGIN) --- */
         #login-screen { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            background-color: var(--primary-dark);
+            background: linear-gradient(-45deg, #1e293b, #0f172a, #334155, #1e293b);
+            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
             z-index: 10000; padding: 20px; box-sizing: border-box;
-            overflow: hidden;
         }
 
-        /* Orbes difuminados de fondo (Aurora Effect) */
-        .bg-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: 0;
-            opacity: 0.5;
-            animation: floatOrb 15s infinite alternate ease-in-out;
-        }
-        .orb-1 {
-            width: 40vw; height: 40vw; max-width: 400px; max-height: 400px;
-            background: var(--info);
-            top: 10%; left: 15%;
-        }
-        .orb-2 {
-            width: 35vw; height: 35vw; max-width: 350px; max-height: 350px;
-            background: var(--accent);
-            bottom: 10%; right: 15%;
-            animation-delay: -5s;
-        }
-
-        @keyframes floatOrb {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(30px, 50px) scale(1.1); }
-            100% { transform: translate(-30px, -20px) scale(0.9); }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }
         }
 
         .login-box { 
-            background: rgba(255, 255, 255, 0.85); 
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            padding: 50px 35px; border-radius: 24px; 
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.5); 
-            width: 100%; max-width: 420px; text-align: center; 
-            position: relative; z-index: 1;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            padding: 40px 30px; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); 
+            width: 100%; max-width: 400px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.3);
             transition: transform 0.3s ease;
         }
         
-        .brand-header {
-            margin-bottom: 25px;
-        }
-
-        .login-logo { 
-            font-size: 50px; margin-bottom: 5px; display: inline-block; 
-            animation: pulseIcon 3s infinite ease-in-out; 
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
-        }
+        .login-logo { font-size: 48px; margin-bottom: 5px; display: inline-block; animation: pulseIcon 2s infinite; }
 
         @keyframes pulseIcon {
-            0%, 100% { transform: translateY(0); } 
-            50% { transform: translateY(-5px); }
+            0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; }
         }
 
-        .login-box h1 { 
-            margin: 0; font-size: 36px; font-weight: 800; letter-spacing: -1.5px; 
-            background: linear-gradient(135deg, var(--primary-dark), var(--info));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        
-        .badge-pro {
-            font-size: 11px; background: linear-gradient(135deg, var(--accent), var(--info));
-            color: white; padding: 4px 8px; border-radius: 8px; font-weight: 800;
-            letter-spacing: 1px; -webkit-text-fill-color: white; transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
+        .login-box h1 { color: var(--primary-dark); margin: 0 0 5px 0; font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+        .login-box p.subtitle { color: var(--text-muted); font-size: 14px; font-weight: 500; margin-bottom: 30px; line-height: 1.4; }
+
+        .input-group { position: relative; margin-bottom: 20px; display: flex; align-items: center; }
+
+        .login-box input { 
+            width: 100%; padding: 15px !important; border: 2px solid #e2e8f0; border-radius: 12px; 
+            box-sizing: border-box; font-size: 15px; font-family: var(--body-font); font-weight: 500;
+            background-color: white; color: var(--primary-dark); transition: all 0.3s ease; -webkit-appearance: none;
         }
 
-        .login-box p.subtitle { color: var(--text-muted); font-size: 15px; font-weight: 500; margin: 10px 0 35px 0; line-height: 1.4; }
-
-        /* Campos Flotantes (Floating Labels) - MUY PROFESIONAL */
-        .form-floating {
-            position: relative;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .form-floating input { 
-            width: 100%; padding: 22px 15px 10px 15px !important; 
-            border: 2px solid #e2e8f0; border-radius: 14px; 
-            box-sizing: border-box; font-size: 15px; font-family: var(--body-font); font-weight: 600;
-            background-color: rgba(255,255,255,0.9); color: var(--primary-dark); 
-            transition: all 0.3s ease; -webkit-appearance: none; outline: none;
-        }
-
-        .form-floating label {
-            position: absolute; top: 16px; left: 16px;
-            font-size: 15px; font-weight: 500; color: var(--text-muted);
-            transition: all 0.2s ease; pointer-events: none;
-            letter-spacing: 0; text-transform: none;
-        }
-
-        .form-floating input:focus, .form-floating input:not(:placeholder-shown) {
-            border-color: var(--info); background-color: white;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-        }
-
-        .form-floating input:focus + label, .form-floating input:not(:placeholder-shown) + label {
-            top: 6px; font-size: 11px; font-weight: 800; color: var(--info); text-transform: uppercase;
-        }
-        
-        .form-floating input:not(:placeholder-shown):not(:focus) + label {
-            color: var(--text-muted);
-        }
+        .login-box input:focus { outline: none; border-color: var(--info); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
 
         .login-box button { 
-            width: 100%; padding: 18px; 
-            background: linear-gradient(135deg, var(--info), #2563eb); 
-            color: white; border: none; border-radius: 14px; font-weight: 800; font-size: 16px; 
+            width: 100%; padding: 16px; background: linear-gradient(135deg, var(--info), #2563eb); 
+            color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 16px; 
             text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; 
-            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4); margin-top: 10px;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); margin-top: 10px;
         }
-        .login-box button:hover { 
-            background: linear-gradient(135deg, #2563eb, #1d4ed8); 
-            transform: translateY(-3px); box-shadow: 0 15px 25px -5px rgba(59, 130, 246, 0.5);
-        }
-        .login-box button:active { transform: translateY(0); }
+        .login-box button:hover { background: linear-gradient(135deg, #2563eb, #1d4ed8); transform: translateY(-2px); }
 
         #login-error { 
             background-color: #fef2f2; color: var(--danger); font-size: 13px; font-weight: 600;
-            margin-bottom: 20px; padding: 12px; border-radius: 10px; border: 1px solid #fecaca;
-            display: none; text-align: center; animation: shake 0.5s ease-in-out;
+            margin-bottom: 20px; padding: 12px; border-radius: 8px; border: 1px solid #fecaca;
+            display: none; text-align: left; animation: shake 0.5s ease-in-out;
         }
 
         @keyframes shake {
@@ -162,12 +83,10 @@
         }
 
         .login-footer { 
-            margin-top: 35px; color: rgba(255,255,255,0.7); font-size: 12px; text-align: center; 
-            line-height: 1.8; font-weight: 500; background: rgba(255,255,255,0.1); 
-            backdrop-filter: blur(10px); padding: 12px 30px; border-radius: 50px;
-            border: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 1;
+            margin-top: 30px; color: rgba(255,255,255,0.7); font-size: 12px; text-align: center; 
+            line-height: 1.8; font-weight: 500; background: rgba(0,0,0,0.2); padding: 12px 25px; border-radius: 50px;
         }
-        .login-footer strong { color: white; font-weight: 800; }
+        .login-footer strong { color: white; font-weight: 700; }
 
         /* HEADER NAV */
         .top-nav { display: flex; justify-content: space-between; align-items: center; background: white; padding: 12px 25px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
@@ -239,11 +158,34 @@
         .resumen-sede-card { background: white; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
         .badge-cantidad { background: #f1f5f9; color: var(--primary); width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; border: 1px solid #e2e8f0; }
         
-        .locked-sede { position: relative; overflow: hidden; border-color: #cbd5e1; }
-        .locked-sede .card-content { filter: blur(4px); opacity: 0.5; user-select: none; pointer-events: none; }
-        .locked-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.4); z-index: 2; }
+        /* NUEVAS CLASES PARA EL EFECTO DE CANDADO Y BORROSO */
+        .locked-sede {
+            position: relative;
+            overflow: hidden;
+            border-color: #cbd5e1;
+        }
+        .locked-sede .card-content {
+            filter: blur(4px);
+            opacity: 0.5;
+            user-select: none;
+            pointer-events: none;
+        }
+        .locked-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.4);
+            z-index: 2;
+        }
         .locked-overlay span:first-child { font-size: 24px; }
-        .locked-overlay span:last-child { font-size: 11px; font-weight: 800; color: var(--primary-dark); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; background: white; padding: 2px 8px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .locked-overlay span:last-child { 
+            font-size: 11px; font-weight: 800; color: var(--primary-dark); 
+            margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+            background: white; padding: 2px 8px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
         .alert-critica { background: #fef2f2; color: var(--danger); padding: 12px; border-radius: 10px; font-size: 12px; font-weight: 700; display: none; margin-bottom: 15px; border: 2px solid #fecaca; text-align: center; }
         .pegado-exito { background-color: #ecfdf5 !important; border-color: var(--success) !important; transition: 0.5s; }
@@ -270,33 +212,26 @@
 <div id="loader">🔄 Sincronizando con la nube...</div>
 
 <div id="login-screen">
-    <div class="bg-orb orb-1"></div>
-    <div class="bg-orb orb-2"></div>
-
     <div class="login-box">
-        <div class="brand-header">
-            <div class="login-logo">📊</div>
-            <h1>VPM <span class="badge-pro">PRO</span></h1>
-            <p class="subtitle">Gestión Consolidada de Caja</p>
-        </div>
+        <div class="login-logo">📊</div>
+        <h1>VPM</h1>
+        <p class="subtitle">Control de Caja Profesional<br>Por favor, identifíquese para continuar</p>
         
         <div id="login-error"></div>
         
-        <div class="form-floating">
-            <input type="email" id="email" placeholder=" " required>
-            <label>Correo Electrónico</label>
+        <div class="input-group">
+            <input type="email" id="email" placeholder="Correo electrónico" required>
         </div>
         
-        <div class="form-floating">
-            <input type="password" id="password" placeholder=" " required>
-            <label>Contraseña</label>
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Contraseña" required>
         </div>
         
-        <button onclick="iniciarSesion()">Acceder al Sistema</button>
+        <button onclick="iniciarSesion()">Entrar al Sistema</button>
     </div>
     
     <div class="login-footer">
-        Desarrollado por <strong>Jose</strong> &nbsp;·&nbsp; Lanzado por <strong>Samuel</strong>
+        Desarrollado por <strong>José Rodriguez</strong> &nbsp;|&nbsp; Lanzado por <strong>Samuel Acevedo</strong>
     </div>
 </div>
 
@@ -324,7 +259,7 @@
             <label>Número de Referencia</label>
             <input type="text" id="bs-ref" placeholder="Ej: 8844">
             
-            <button class="btn-pegar-unico" onclick="pegarTodoDesdePortapapeles()">📋 Pegar datos de Banesco</button>
+            <button class="btn-pegar-unico" onclick="pegarTodoDesdePortapapeles()">📋 Pegar</button>
             
             <label>Sede / Local</label>
             <select id="bs-sede">
@@ -377,7 +312,7 @@
             <div class="scroll-area" id="resumen-final" style="margin-top: 10px;"></div>
             
             <div style="margin-top:auto;">
-                <button class="btn btn-banco" onclick="abrirBanco()">🏦 Abrir Portal Banesco</button>
+                <button class="btn btn-banco" onclick="abrirBanco()">🏦 Abrir Banco</button>
                 <button id="btn-pdf" class="btn btn-pdf hidden" onclick="exportarPDF()">📥 Descargar Reporte PDF</button>
                 <button id="btn-reset" class="btn btn-reset hidden" onclick="reiniciarDia()">🗑️ Reiniciar Día (Borrar Todo)</button>
             </div>
@@ -595,6 +530,7 @@
             const uS = localDB.cuadre.filter(x => x.sede === s && x.tipo === 'Dólares').reduce((a,b) => a+b.monto, 0);
             tReg += rS; tPto += pS; tUsd += uS;
             
+            // Lógica para bloquear/difuminar la tarjeta si no es admin y no es su propia sede
             const isLocked = currentUserProfile.role !== 'admin' && s !== currentUserProfile.sede;
             
             if (isLocked) {
