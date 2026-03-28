@@ -25,56 +25,74 @@
             padding: 15px; overflow: hidden; height: 100vh; box-sizing: border-box; color: var(--text-main);
         }
         
-        /* --- ESTILOS PAGINA DE INICIO (LOGIN) --- */
+        /* --- ESTILOS MEJORADOS PAGINA DE INICIO (LOGIN PREMIUM) --- */
         #login-screen { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            background: linear-gradient(-45deg, #1e293b, #0f172a, #334155, #1e293b);
-            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+            background-color: var(--primary-dark);
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            z-index: 10000; padding: 20px; box-sizing: border-box;
+            z-index: 10000; padding: 20px; box-sizing: border-box; overflow: hidden;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }
+        /* Esferas de luz animadas de fondo (Efecto Aurora/Mesh) */
+        .bg-shape {
+            position: absolute; filter: blur(80px); opacity: 0.5; border-radius: 50%; z-index: 1;
+            animation: float 12s infinite alternate ease-in-out;
+        }
+        .shape1 { background: var(--info); width: 40vw; height: 40vw; top: -10%; left: -10%; animation-delay: 0s; }
+        .shape2 { background: var(--accent); width: 50vw; height: 50vw; bottom: -20%; right: -10%; animation-delay: -5s; }
+        .shape3 { background: #2563eb; width: 30vw; height: 30vw; bottom: 20%; left: 20%; animation-delay: -2s; opacity: 0.3;}
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-30px) scale(1.1); }
         }
 
+        /* Tarjeta de cristal ultra-pulida */
         .login-box { 
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            padding: 40px 30px; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); 
-            width: 100%; max-width: 400px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: transform 0.3s ease;
+            background: rgba(255, 255, 255, 0.92); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+            padding: 45px 35px; border-radius: 24px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6); 
+            width: 100%; max-width: 400px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
         }
+        .login-box:hover { transform: translateY(-5px); }
         
-        .login-logo { font-size: 48px; margin-bottom: 5px; display: inline-block; animation: pulseIcon 2s infinite; }
+        .login-logo { font-size: 52px; margin-bottom: 5px; display: inline-block; animation: pulseIcon 3s infinite; text-shadow: 0 10px 20px rgba(0,0,0,0.1); }
 
         @keyframes pulseIcon {
-            0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; }
+            0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); }
         }
 
-        .login-box h1 { color: var(--primary-dark); margin: 0 0 5px 0; font-size: 32px; font-weight: 800; letter-spacing: -1px; }
-        .login-box p.subtitle { color: var(--text-muted); font-size: 14px; font-weight: 500; margin-bottom: 30px; line-height: 1.4; }
+        .login-box h1 { color: var(--primary-dark); margin: 0 0 5px 0; font-size: 34px; font-weight: 800; letter-spacing: -1.5px; }
+        .login-box p.subtitle { color: var(--text-muted); font-size: 14px; font-weight: 500; margin-bottom: 35px; line-height: 1.5; }
 
-        .input-group { position: relative; margin-bottom: 20px; display: flex; align-items: center; }
+        .input-group { position: relative; margin-bottom: 20px; }
 
         .login-box input { 
-            width: 100%; padding: 15px !important; border: 2px solid #e2e8f0; border-radius: 12px; 
+            width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 14px; 
             box-sizing: border-box; font-size: 15px; font-family: var(--body-font); font-weight: 500;
-            background-color: white; color: var(--primary-dark); transition: all 0.3s ease; -webkit-appearance: none;
+            background-color: #f8fafc; color: var(--primary-dark); transition: all 0.3s ease; -webkit-appearance: none;
         }
 
-        .login-box input:focus { outline: none; border-color: var(--info); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+        .login-box input:focus { 
+            outline: none; border-color: var(--info); background-color: white;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); 
+        }
 
+        /* Botón de login con gradiente y efecto brillo */
         .login-box button { 
-            width: 100%; padding: 16px; background: linear-gradient(135deg, var(--info), #2563eb); 
-            color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 16px; 
-            text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; 
-            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); margin-top: 10px;
+            width: 100%; padding: 16px; 
+            background: linear-gradient(135deg, var(--info), #2563eb, var(--accent)); 
+            background-size: 200% auto;
+            color: white; border: none; border-radius: 14px; font-weight: 700; font-size: 16px; 
+            text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.5s; 
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4); margin-top: 10px;
         }
-        .login-box button:hover { background: linear-gradient(135deg, #2563eb, #1d4ed8); transform: translateY(-2px); }
+        .login-box button:hover { background-position: right center; transform: translateY(-2px); box-shadow: 0 15px 25px -5px rgba(59, 130, 246, 0.5); }
 
         #login-error { 
             background-color: #fef2f2; color: var(--danger); font-size: 13px; font-weight: 600;
-            margin-bottom: 20px; padding: 12px; border-radius: 8px; border: 1px solid #fecaca;
+            margin-bottom: 20px; padding: 12px; border-radius: 10px; border: 1px solid #fecaca;
             display: none; text-align: left; animation: shake 0.5s ease-in-out;
         }
 
@@ -83,8 +101,9 @@
         }
 
         .login-footer { 
-            margin-top: 30px; color: rgba(255,255,255,0.7); font-size: 12px; text-align: center; 
-            line-height: 1.8; font-weight: 500; background: rgba(0,0,0,0.2); padding: 12px 25px; border-radius: 50px;
+            margin-top: 35px; color: rgba(255,255,255,0.6); font-size: 12px; text-align: center; 
+            line-height: 1.8; font-weight: 500; background: rgba(0,0,0,0.3); padding: 12px 30px; border-radius: 50px;
+            backdrop-filter: blur(10px); z-index: 10; border: 1px solid rgba(255,255,255,0.1);
         }
         .login-footer strong { color: white; font-weight: 700; }
 
@@ -234,6 +253,10 @@
 </div>
 
 <div id="login-screen">
+    <div class="bg-shape shape1"></div>
+    <div class="bg-shape shape2"></div>
+    <div class="bg-shape shape3"></div>
+
     <div class="login-box">
         <div class="login-logo">📊</div>
         <h1>VPM</h1>
@@ -253,7 +276,7 @@
     </div>
     
     <div class="login-footer">
-        Desarrollado por <strong>Jose R.</strong> &nbsp;|&nbsp; Lanzado por <strong>Samuel A.</strong>
+        Creado por <strong>Jose R.</strong> &nbsp;|&nbsp; Lanzado por <strong>Samuel A.</strong>
     </div>
 </div>
 
@@ -281,7 +304,7 @@
             <label>Número de Referencia</label>
             <input type="text" id="bs-ref" placeholder="Ej: 8844">
             
-            <button class="btn-pegar-unico" onclick="pegarTodoDesdePortapapeles()">📋 Pegar datos</button>
+            <button class="btn-pegar-unico" onclick="pegarTodoDesdePortapapeles()">📋 Pegar datos de Banesco</button>
             
             <label>Sede / Local</label>
             <select id="bs-sede">
@@ -330,7 +353,7 @@
                 <button id="btn-crear-sede" class="btn hidden" style="background:#059669; margin-top:10px;" onclick="abrirModalSedes()">🏢 Crear Nueva Sede</button>
                 <button id="btn-crear-usuario" class="btn hidden" style="background:#4f46e5; margin-top:10px;" onclick="abrirModalUsuarios()">👥 Crear Nuevo Usuario</button>
 
-                <button class="btn btn-banco" onclick="abrirBanco()">🏦 Abrir Banco</button>
+                <button class="btn btn-banco" onclick="abrirBanco()">🏦 Abrir Portal Banesco</button>
                 <button id="btn-pdf" class="btn btn-pdf hidden" onclick="exportarPDF()">📥 Descargar Reporte PDF</button>
                 <button id="btn-reset" class="btn btn-reset hidden" onclick="reiniciarDia()">🗑️ Reiniciar Día (Borrar Todo)</button>
             </div>
@@ -432,6 +455,7 @@
             
             document.getElementById('email').value = ''; document.getElementById('password').value = '';
 
+            // LÓGICA DE MOSTRAR/OCULTAR BOTONES SEGÚN ROL
             if (currentUserProfile.role === 'admin') {
                 badge.innerText = 'Administrador'; badge.classList.add('admin');
                 document.getElementById('btn-pdf').classList.remove('hidden');
@@ -444,6 +468,13 @@
                 document.getElementById('filtro-sede').disabled = false;
             } else {
                 badge.innerText = currentUserProfile.sede; badge.classList.remove('admin');
+                
+                // OCULTA EXPRESAMENTE LOS BOTONES A USUARIOS NORMALES
+                document.getElementById('btn-pdf').classList.add('hidden');
+                document.getElementById('btn-reset').classList.add('hidden');
+                document.getElementById('btn-crear-sede').classList.add('hidden');
+                document.getElementById('btn-crear-usuario').classList.add('hidden');
+                
                 document.getElementById('bs-sede').disabled = true;
                 document.getElementById('filtro-sede').disabled = true;
                 document.getElementById('form-cuadre').classList.add('disabled-panel');
