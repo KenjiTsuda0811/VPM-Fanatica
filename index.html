@@ -26,7 +26,6 @@
         }
         
         /* --- ESTILOS OPTIMIZADOS PARA WINDOWS SERVER (LOGIN) --- */
-        /* Sin animaciones pesadas, colores sólidos para máxima velocidad en RDP */
         #login-screen { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             background-color: var(--primary-dark); 
@@ -83,7 +82,7 @@
         .btn-logout { background: #f1f5f9; color: var(--text-main); border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: background-color 0.2s; }
         .btn-logout:hover { background: #e2e8f0; }
 
-        /* APP LAYOUT - AHORA 4 COLUMNAS PARA INCLUIR GASTOS */
+        /* APP LAYOUT - 4 COLUMNAS */
         #app-layout { display: none; height: calc(100vh - 95px); }
         .main-layout { display: grid; grid-template-columns: 1fr 1fr 1fr 340px; gap: 15px; height: 100%; max-width: 100%; margin: 0 auto; }
         .panel { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #e2e8f0; position: relative;}
@@ -244,7 +243,7 @@
     </div>
     
     <div class="login-footer">
-        Creador por <strong>Jose R.</strong> &nbsp;|&nbsp; Lanzado por <strong>Samuel A.</strong>
+        Creador por <strong>"Jose R."</strong> y lanzado por <strong>"Samuel A."</strong>
     </div>
 </div>
 
@@ -456,7 +455,6 @@
             
             document.getElementById('email').value = ''; document.getElementById('password').value = '';
 
-            // LOGICA PARA MOSTRAR "CAMBIO DE DIVISAS"
             const optDivisas = document.getElementById('opt-divisas');
             if (currentUserProfile.role === 'admin' || currentUserProfile.sede === 'Belleza Principal' || currentUserProfile.sede === 'Gran Bazar') {
                 optDivisas.style.display = 'block';
@@ -508,7 +506,11 @@
         onValue(sedesRef, (snapshot) => {
             let dbSedes = [];
             if(snapshot.exists()) {
-                snapshot.forEach(child => dbSedes.push(child.val()));
+                snapshot.forEach(child => {
+                    const val = child.val();
+                    if(val && val.nombre) dbSedes.push(val.nombre);
+                    else if(typeof val === 'string') dbSedes.push(val); 
+                });
             }
             sedes = [...new Set([...SEDES_DEFAULT, ...dbSedes])];
             actualizarSelectsSedes();
@@ -527,7 +529,6 @@
             localDB.cuadre.reverse(); renderUI();
         });
 
-        // NUEVO: Escuchar Gastos
         onValue(gastosRef, (snapshot) => {
             localDB.gastos = [];
             snapshot.forEach(child => { localDB.gastos.push({ id: child.key, ...child.val() }); });
@@ -550,7 +551,6 @@
         }
     }
 
-    // MODALES - SOLO ACCESIBLES SI ERES ADMIN
     window.abrirModalSedes = () => {
         if(currentUserProfile?.role !== 'admin') return;
         document.getElementById('modal-overlay').style.display = 'flex';
@@ -574,17 +574,23 @@
         document.getElementById('div-nuevo-usu-sede').style.display = rol === 'admin' ? 'none' : 'block';
     };
 
+    /* --- CORRECCION AL CREAR SEDE --- */
     window.guardarSede = () => {
         if(currentUserProfile?.role !== 'admin') return;
         const nombre = document.getElementById('nueva-sede-nombre').value.trim();
         if(!nombre) return alert("Ingrese un nombre para la sede.");
-        if(sedes.includes(nombre)) return alert("Esta sede ya existe en el sistema.");
+        if(sedes.map(s=>s.toLowerCase()).includes(nombre.toLowerCase())) return alert("Esta sede ya existe en el sistema.");
         
         showLoader(true);
-        push(ref(db, 'vpm/sedes_list'), nombre).then(() => {
+        // Se envía como objeto con clave 'nombre' para que Firebase lo reconozca correctamente al iterarlo
+        const nuevaSedeRef = push(ref(db, 'vpm/sedes_list'));
+        set(nuevaSedeRef, { nombre: nombre }).then(() => {
             alert("Sede creada exitosamente.");
             document.getElementById('nueva-sede-nombre').value = '';
             cerrarModales(); showLoader(false);
+        }).catch(e => {
+            alert("Error: " + e.message);
+            showLoader(false);
         });
     };
 
@@ -657,7 +663,6 @@
         montoI.value = '';
     };
 
-    // NUEVO: Registrar Gasto
     window.registrarGasto = () => {
         const tipo = document.getElementById('g-tipo').value;
         const concepto = document.getElementById('g-concepto').value.trim();
@@ -697,7 +702,6 @@
         if (confirm("¿Seguro que desea ELIMINAR este cierre?")) { showLoader(true); remove(ref(db, `vpm/cuadre/${id}`)); }
     };
 
-    // NUEVO: Eliminar Gasto
     window.eliminarGasto = (id) => {
         const i = localDB.gastos.find(x => x.id === id); if(!i) return;
         if (currentUserProfile.role !== 'admin' && i.sede !== currentUserProfile.sede) { alert("No tienes permisos."); return; }
@@ -721,17 +725,14 @@
         const fSede = document.getElementById('filtro-sede').value;
         const fRef = document.getElementById('buscador').value.toLowerCase();
 
-        // Render Ingresos
         const filtradosBs = localDB.bs.filter(i => (fSede === "Todas" || i.sede === fSede) && i.ref.toLowerCase().includes(fRef));
         document.getElementById('lista-bs').innerHTML = filtradosBs.map(i => {
             const canEdit = currentUserProfile.role === 'admin' || i.sede === currentUserProfile.sede;
             return `<div class="item item-bs"><span class="item-sede-name">${i.sede}</span><span class="item-monto">${fmtBs(i.monto)}</span><span class="item-ref">Ref: ${i.ref}</span><div class="item-meta"><span class="time-label">${i.hora}</span>${canEdit ? `<button class="btn-edit" onclick="gestionarBs('${i.id}')">✏️</button>` : ''}</div></div>`;
         }).join('');
 
-        // Render Cuadres
         document.getElementById('lista-cuadre').innerHTML = localDB.cuadre.map(i => `<div class="item item-cuadre"><span class="item-sede-name">${i.sede}</span><span class="item-monto">${i.tipo === 'Dólares' ? fmtUsd(i.monto) : fmtBs(i.monto)}</span><span class="item-ref">${i.tipo === 'Punto' ? 'Cierre Punto' : 'Efectivo USD'}</span>${currentUserProfile.role === 'admin' ? `<div class="item-meta"><button class="btn-del" onclick="eliminarC('${i.id}')">🗑️</button></div>` : ''}</div>`).join('');
         
-        // NUEVO: Render Gastos
         const filtradosGastos = localDB.gastos.filter(i => (fSede === "Todas" || i.sede === fSede));
         document.getElementById('lista-gastos').innerHTML = filtradosGastos.map(i => {
             const canEdit = currentUserProfile.role === 'admin' || i.sede === currentUserProfile.sede;
@@ -739,7 +740,6 @@
             return `<div class="item item-gastos"><span class="item-sede-name">${i.sede}</span><span class="item-monto">${formatMonto}</span><span class="item-ref">${i.tipo}: ${i.concepto}</span><div class="item-meta"><span class="time-label">${i.hora}</span>${canEdit ? `<button class="btn-del" onclick="eliminarGasto('${i.id}')">🗑️</button>` : ''}</div></div>`;
         }).join('');
 
-        // Render Resumen
         let tReg = 0, tPto = 0, tUsd = 0;
         const resDiv = document.getElementById('resumen-final'); resDiv.innerHTML = '';
         
@@ -826,13 +826,16 @@
 
     window.abrirBanco = () => { window.open('https://www.banesconline.com/Mantis/WebSite/login.aspx', 'banesco', 'width=1200,height=800'); };
 
+    /* --- GENERACION PDF TRANSACCIONES --- */
     window.exportarPDF = () => {
         if (currentUserProfile.role !== 'admin') return;
         if (typeof window.jspdf === 'undefined') return alert('Error crítico: La librería PDF no está disponible.');
         showLoader(true); const { jsPDF } = window.jspdf; const doc = new jsPDF();
         
         doc.setFont("helvetica", "bold"); doc.setFontSize(20); doc.setTextColor(30, 41, 59); doc.text("VPM - REPORTE DE TRANSACCIONES", 14, 22);
-        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100); doc.text(`Fecha de generación: ${new Date().toLocaleString('es-VE')}`, 14, 30); doc.text(`Generado por: ${auth.currentUser.email}`, 14, 35);
+        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100); 
+        doc.text(`Fecha y Hora de emisión: ${new Date().toLocaleString('es-VE')}`, 14, 30); 
+        doc.text(`Generado por: ${auth.currentUser.email}`, 14, 35);
         doc.setDrawColor(226, 232, 240); doc.line(14, 40, 196, 40);
 
         doc.setFontSize(14); doc.setTextColor(59, 130, 246); doc.text("1. RESUMEN GENERAL POR SEDE", 14, 50);
@@ -854,18 +857,40 @@
         showLoader(false); window.open(doc.output('bloburl'), '_blank');
     };
 
-    // NUEVO: PDF EXCLUSIVO PARA GASTOS
+    /* --- GENERACION PDF GASTOS (NUEVO) --- */
     window.exportarPDFGastos = () => {
         if (currentUserProfile.role !== 'admin') return;
         if (typeof window.jspdf === 'undefined') return alert('Error crítico: La librería PDF no está disponible.');
         showLoader(true); const { jsPDF } = window.jspdf; const doc = new jsPDF();
         
         doc.setFont("helvetica", "bold"); doc.setFontSize(20); doc.setTextColor(30, 41, 59); doc.text("VPM - REPORTE DE GASTOS Y NÓMINAS", 14, 22);
-        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100); doc.text(`Fecha de generación: ${new Date().toLocaleString('es-VE')}`, 14, 30); doc.text(`Generado por: ${auth.currentUser.email}`, 14, 35);
+        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100); 
+        doc.text(`Fecha y Hora de emisión: ${new Date().toLocaleString('es-VE')}`, 14, 30); 
+        doc.text(`Generado por: ${auth.currentUser.email}`, 14, 35);
         doc.setDrawColor(226, 232, 240); doc.line(14, 40, 196, 40);
 
-        doc.setFontSize(14); doc.setTextColor(217, 119, 6); // Color Naranja/Gastos
-        doc.text("DETALLE DE OPERACIONES", 14, 50);
+        doc.setFontSize(14); doc.setTextColor(217, 119, 6); 
+        doc.text("1. RESUMEN DE GASTOS POR SEDE", 14, 50);
+
+        const resumenGastosCuerpo = sedes.map(s => {
+            const gBs = localDB.gastos.filter(x => x.sede === s && x.moneda === 'Bs').reduce((a,b) => a + b.monto, 0);
+            const gUsd = localDB.gastos.filter(x => x.sede === s && x.moneda === 'USD').reduce((a,b) => a + b.monto, 0);
+            return [s, fmtBs(gBs), fmtUsd(gUsd)];
+        });
+
+        doc.autoTable({ 
+            startY: 55, 
+            head: [['Sede / Local', 'Total Gastos (Bs)', 'Total Gastos ($)']], 
+            body: resumenGastosCuerpo, 
+            theme: 'striped', 
+            headStyles: { fillColor: [217, 119, 6], fontStyle: 'bold' },
+            styles: { font: 'helvetica', fontSize: 9, cellPadding: 4 },
+            columnStyles: { 0: { fontStyle: 'bold' } } 
+        });
+
+        let finalY = doc.lastAutoTable.finalY + 15;
+        doc.setFontSize(14); doc.setTextColor(217, 119, 6); 
+        doc.text("2. DETALLE DE OPERACIONES", 14, finalY);
         
         const gastosCuerpo = localDB.gastos.map(x => {
             const formatMonto = x.moneda === 'USD' ? fmtUsd(x.monto) : fmtBs(x.monto);
@@ -873,12 +898,12 @@
         });
 
         doc.autoTable({ 
-            startY: 55, 
-            head: [['Sede / Local', 'Hora', 'Tipo de Operación', 'Concepto', 'Monto']], 
+            startY: finalY + 8, 
+            head: [['Sede / Local', 'Hora', 'Tipo', 'Concepto', 'Monto']], 
             body: gastosCuerpo, 
             theme: 'grid', 
-            headStyles: { fillColor: [217, 119, 6], fontStyle: 'bold' }, 
-            styles: { font: 'helvetica', fontSize: 9, cellPadding: 4 }, 
+            headStyles: { fillColor: [217, 119, 6] }, 
+            styles: { font: 'helvetica', fontSize: 8 }, 
             columnStyles: { 4: { halign: 'right', fontStyle: 'bold' } } 
         });
 
