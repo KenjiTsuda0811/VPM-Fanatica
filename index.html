@@ -16,880 +16,839 @@
         :root { 
             --primary: #1e293b; --primary-dark: #0f172a; --success: #10b981; 
             --info: #3b82f6; --warning: #f59e0b; --danger: #ef4444; 
-            --accent: #8b5cf6; --gastos: #d97706; --bg: #f1f5f9; --text-main: #1e293b;
-            --text-muted: #64748b; --body-font: 'Plus Jakarta Sans', sans-serif;
+            --accent: #8b5cf6; --bg: #f8fafc; --surface: #ffffff; 
+            --text: #334155; --text-light: #64748b; --border: #e2e8f0; 
         }
-
+        
         body { 
-            font-family: var(--body-font); background-color: var(--bg); margin: 0; 
-            padding: 15px; overflow: hidden; height: 100vh; box-sizing: border-box; color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text);
+            margin: 0; padding: 15px; height: 100vh; box-sizing: border-box; overflow: hidden;
         }
         
-        /* --- ESTILOS OPTIMIZADOS PARA WINDOWS SERVER (LOGIN) --- */
-        #login-screen { 
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            background-color: var(--primary-dark); 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            z-index: 10000; padding: 20px; box-sizing: border-box;
-        }
-
-        .login-box { 
-            background: #ffffff; 
-            padding: 40px 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
-            width: 100%; max-width: 400px; text-align: center; border: 1px solid #e2e8f0;
+        /* --- LAYOUT PRINCIPAL --- */
+        .main-layout { 
+            display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) 380px; 
+            gap: 20px; height: 100%; max-width: 1920px; margin: 0 auto; 
         }
         
-        .login-logo { font-size: 48px; margin-bottom: 5px; display: inline-block; }
-
-        .login-box h1 { color: var(--primary-dark); margin: 0 0 5px 0; font-size: 32px; font-weight: 800; letter-spacing: -1px; }
-        .login-box p.subtitle { color: var(--text-muted); font-size: 14px; font-weight: 500; margin-bottom: 30px; line-height: 1.4; }
-
-        .input-group { position: relative; margin-bottom: 20px; display: flex; align-items: center; }
-
-        .login-box input { 
-            width: 100%; padding: 15px !important; border: 2px solid #e2e8f0; border-radius: 8px; 
-            box-sizing: border-box; font-size: 15px; font-family: var(--body-font); font-weight: 500;
-            background-color: #f8fafc; color: var(--primary-dark); transition: border-color 0.2s ease; -webkit-appearance: none;
+        .panel { 
+            background: var(--surface); padding: 20px; border-radius: 20px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03), 0 1px 3px rgba(0,0,0,0.05); 
+            display: flex; flex-direction: column; overflow: hidden; border-top: 5px solid var(--primary); 
         }
-
-        .login-box input:focus { outline: none; border-color: var(--info); background-color: #ffffff; }
-
-        .login-box button { 
-            width: 100%; padding: 16px; background-color: var(--info); 
-            color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 16px; 
-            text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: background-color 0.2s ease; 
-            margin-top: 10px;
+        .panel-ingresos { border-top-color: var(--success); }
+        .panel-gastos { border-top-color: var(--warning); }
+        .panel-resumen { border-top-color: var(--info); }
+        
+        h2 { 
+            margin: 0 0 20px 0; color: var(--primary-dark); font-size: 1.15rem; 
+            display: flex; align-items: center; gap: 8px; font-weight: 700; 
         }
-        .login-box button:hover { background-color: #2563eb; }
-
-        #login-error { 
-            background-color: #fef2f2; color: var(--danger); font-size: 13px; font-weight: 600;
-            margin-bottom: 20px; padding: 12px; border-radius: 8px; border: 1px solid #fecaca;
-            display: none; text-align: left;
+        
+        /* --- FORMULARIOS --- */
+        .input-group { margin-bottom: 15px; }
+        label { font-size: 12px; font-weight: 600; color: var(--text-light); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select { 
+            width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px; 
+            box-sizing: border-box; font-size: 14px; font-family: inherit; color: var(--text);
+            transition: all 0.2s; background-color: #f8fafc;
         }
-
-        .login-footer { 
-            margin-top: 30px; color: rgba(255,255,255,0.6); font-size: 13px; text-align: center; 
-            line-height: 1.8; font-weight: 500; padding: 12px 25px;
+        input:focus, select:focus { outline: none; border-color: var(--info); background-color: white; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        
+        /* --- BOTONES --- */
+        .btn { 
+            width: 100%; padding: 14px; color: white; border: none; border-radius: 12px; cursor: pointer; 
+            font-weight: 700; font-size: 14px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; 
         }
-        .login-footer strong { color: white; font-weight: 700; }
-
-        /* HEADER NAV */
-        .top-nav { display: flex; justify-content: space-between; align-items: center; background: white; padding: 12px 25px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
-        .user-info { font-weight: 700; color: var(--primary-dark); font-size: 14px; display: flex; align-items: center; gap: 12px; }
-        .role-badge { background: var(--warning); color: white; padding: 4px 10px; border-radius: 50px; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;}
-        .role-badge.admin { background: var(--danger); }
-        .btn-logout { background: #f1f5f9; color: var(--text-main); border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: background-color 0.2s; }
-        .btn-logout:hover { background: #e2e8f0; }
-
-        /* APP LAYOUT - 4 COLUMNAS */
-        #app-layout { display: none; height: calc(100vh - 95px); }
-        .main-layout { display: grid; grid-template-columns: 1fr 1fr 1fr 340px; gap: 15px; height: 100%; max-width: 100%; margin: 0 auto; }
-        .panel { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #e2e8f0; position: relative;}
+        .btn:active { transform: scale(0.98); }
+        .btn-ingreso { background: var(--success); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
+        .btn-ingreso:hover { background: #059669; }
+        .btn-gasto { background: var(--warning); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); }
+        .btn-gasto:hover { background: #d97706; }
         
-        .panel::before { content:''; position: absolute; top:0; left:25px; right:25px; height: 4px; border-radius: 0 0 4px 4px; }
-        .panel-ingresos::before { background-color: var(--success); }
-        .panel-cuadre::before { background-color: var(--accent); }
-        .panel-gastos::before { background-color: var(--gastos); }
-        .panel-resumen::before { background-color: var(--info); }
-        
-        h2 { margin: 0 0 15px 0; color: var(--primary-dark); font-size: 1rem; text-align: center; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
-        label { font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        input:not([type="checkbox"]), select:not([multiple]) { 
-            width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 13px; margin-bottom: 12px; font-family: var(--body-font); color: var(--primary-dark); background-color: #f8fafc; -webkit-appearance: none;
+        .btn-pegar-unico {
+            width: 100%; padding: 10px; background: linear-gradient(135deg, #1e293b, #334155); 
+            color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 13px; 
+            transition: all 0.2s; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 6px;
         }
-        select { -webkit-appearance: auto; }
+        .btn-pegar-unico:hover { background: linear-gradient(135deg, #0f172a, #1e293b); }
         
-        .btn-pegar-unico { width: 100%; padding: 8px 15px; background: white; color: var(--warning); border: 2px solid var(--warning); border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; font-family: var(--body-font);}
-        
-        .btn { width: 100%; padding: 12px; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; text-transform: uppercase; font-family: var(--body-font); letter-spacing: 0.5px; }
-        .btn-ingreso { background-color: var(--success); }
-        .btn-cuadre { background-color: var(--accent); }
-        .btn-gastos-guardar { background-color: var(--gastos); }
-        .btn-pdf { background-color: var(--danger); margin-top: 10px; }
-        .btn-banco { background-color: #1e40af; margin-top: 15px; }
-        .btn-reset { background-color: transparent; color: var(--text-muted); margin-top: 10px; font-size: 11px; padding: 8px; border: 1px solid #e2e8f0; }
-
-        .filtros-box { background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e2e8f0; }
-        .filtros-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .filtros-grid input, .filtros-grid select { margin-bottom: 0; font-size: 12px; padding: 8px; }
-
-        .scroll-area { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
+        /* --- LISTAS Y SCROLL --- */
+        .scroll-area { flex-grow: 1; overflow-y: auto; padding-right: 5px; margin-top: 10px; }
         .scroll-area::-webkit-scrollbar { width: 6px; }
-        .scroll-area::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
-        .scroll-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-
-        .item { background: #fff; border: 1px solid #e2e8f0; padding: 12px; margin-bottom: 10px; border-radius: 8px; position: relative; font-size: 13px; }
+        .scroll-area::-webkit-scrollbar-track { background: transparent; }
+        .scroll-area::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+        
+        .item { 
+            background: white; border: 1px solid var(--border); padding: 14px; margin-bottom: 12px; 
+            border-radius: 12px; position: relative; display: flex; flex-direction: column; gap: 4px; 
+            transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .item:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.04); }
         .item-bs { border-left: 4px solid var(--success); }
-        .item-cuadre { border-left: 4px solid var(--accent); }
-        .item-gastos { border-left: 4px solid var(--gastos); }
+        .item-gasto { border-left: 4px solid var(--warning); }
+
+        .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .item-sede { font-weight: 700; font-size: 13px; color: var(--primary-dark); }
+        .item-monto { font-weight: 800; font-size: 16px; }
+        .monto-bs { color: var(--success); }
+        .monto-gasto { color: var(--warning); }
         
-        .item-sede-name { font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; display: block; }
-        .item-monto { font-size: 15px; font-weight: 800; color: var(--success); margin: 2px 0; display: block;}
-        .item-cuadre .item-monto { color: var(--text-main); }
-        .item-gastos .item-monto { color: var(--gastos); }
-        .item-ref { color: var(--text-muted); font-size: 12px; font-weight: 500; }
-
-        .item-meta { position: absolute; right: 12px; bottom: 12px; display: flex; align-items: center; gap: 8px; }
-        .btn-edit { background: #fef9c3; color: #a16207; border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 13px; }
-        .btn-del { background: #fee2e2; color: var(--danger); border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 13px; }
-        .time-label { font-size: 10px; color: var(--text-muted); font-weight: 600; background: #f1f5f9; padding: 3px 6px; border-radius: 4px; }
-
-        .total-box { padding: 10px; border-radius: 8px; text-align: center; color: white; margin-bottom: 8px; }
-        .total-box small { text-transform: uppercase; font-size: 9px; font-weight: 700; opacity: 0.9; display: block; margin-bottom: 4px;}
-        .total-amount { font-size: 1.2rem; font-weight: 900; }
-
-        .bg-reg { background-color: var(--success); }
-        .bg-pto { background-color: var(--info); }
-        .bg-usd { background-color: var(--accent); }
+        .item-details { font-size: 13px; color: var(--text-light); }
         
-        .mask-text { font-size: 12px !important; font-weight: 700; background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 8px; display: inline-block; color: white; }
+        .item-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); }
+        .time-label { font-size: 11px; font-weight: 600; color: #94a3b8; display: flex; align-items: center; gap: 4px; }
         
-        .resumen-sede-card { background: white; border: 1px solid #e2e8f0; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .badge-cantidad { background: #f1f5f9; color: var(--primary); width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; border: 1px solid #e2e8f0; }
+        .btn-action { background: #f1f5f9; border: none; border-radius: 6px; padding: 6px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .btn-action:hover { background: #e2e8f0; }
+        .btn-edit { color: var(--info); }
+        .btn-delete { color: var(--danger); background: #fef2f2; }
+        .btn-delete:hover { background: #fee2e2; }
+
+        /* --- FILTROS --- */
+        .filtros-box { background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid var(--border); display: flex; gap: 10px; margin-bottom: 5px; }
+        .filtros-box select, .filtros-box input { margin-bottom: 0; padding: 8px 12px; font-size: 13px; }
         
-        .locked-sede { position: relative; overflow: hidden; border-color: #cbd5e1; }
-        .locked-sede .card-content { filter: blur(4px); opacity: 0.5; user-select: none; pointer-events: none; }
-        .locked-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.5); z-index: 2; }
-        .locked-overlay span:first-child { font-size: 20px; }
-        .locked-overlay span:last-child { font-size: 10px; font-weight: 800; color: var(--primary-dark); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; background: white; padding: 2px 8px; border-radius: 6px; border: 1px solid #cbd5e1; }
-
-        .alert-critica { background: #fef2f2; color: var(--danger); padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 700; display: none; margin-bottom: 12px; border: 1px solid #fecaca; text-align: center; }
-        .pegado-exito { background-color: #ecfdf5 !important; border-color: var(--success) !important; transition: background-color 0.3s; }
-
-        .disabled-panel { opacity: 0.6; pointer-events: none; filter: grayscale(0.5); }
-        .hidden { display: none !important; }
-        
-        #loader { position: fixed; bottom: 20px; right: 20px; background: var(--primary-dark); color: white; padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 9999; display: none; }
-
-        /* --- ESTILOS DE MODALES (ADMIN) --- */
-        .modal-overlay {
-            position: fixed; top:0; left:0; width:100vw; height:100vh;
-            background: rgba(15, 23, 42, 0.8);
-            display: none; justify-content: center; align-items: center; z-index: 100000;
+        /* --- RESUMEN --- */
+        .total-card { 
+            padding: 16px; border-radius: 16px; margin-bottom: 12px; color: white; 
+            display: flex; flex-direction: column; gap: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
-        .modal-box {
-            background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 400px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4); position: relative; box-sizing: border-box; margin: 15px; border: 1px solid #e2e8f0;
-        }
-        .modal-close {
-            position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);
-        }
-        .modal-close:hover { color: var(--danger); }
+        .bg-ingresos { background: linear-gradient(135deg, var(--success), #059669); }
+        .bg-gastos { background: linear-gradient(135deg, var(--warning), #d97706); }
+        .total-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
+        .total-monto { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
 
-        @media (max-width: 1200px) {
-            body { height: auto; overflow-y: auto; padding: 10px; }
-            #app-layout { height: auto; }
-            .main-layout { display: flex; flex-direction: column; gap: 15px; height: auto; }
-            .panel { max-height: none; overflow: visible; }
-            .scroll-area { max-height: 350px; overflow-y: auto; }
-            .top-nav { flex-direction: column; align-items: stretch; gap: 10px; }
-            .btn-logout { width: 100%; }
-            .filtros-grid { grid-template-columns: 1fr; }
+        .resumen-sede-card { 
+            background: white; border: 1px solid var(--border); padding: 14px; 
+            border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; 
         }
+        .resumen-sede-info { flex: 1; }
+        .resumen-sede-nombre { font-weight: 700; color: var(--primary-dark); font-size: 14px; margin-bottom: 4px; }
+        .resumen-sede-cifras { font-size: 12px; color: var(--text-light); line-height: 1.5; }
+        .badge-cantidad { 
+            background: var(--info); color: white; width: 36px; height: 36px; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; 
+        }
+        
+        .action-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .btn-pdf { background: var(--primary); box-shadow: 0 4px 12px rgba(30, 41, 59, 0.2); }
+        .btn-pdf:hover { background: var(--primary-dark); }
+        .btn-banco { background: var(--info); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); }
+        .btn-banco:hover { background: #2563eb; }
+        .btn-reset { background: white; color: var(--text-light); border: 1px solid var(--border); }
+        .btn-reset:hover { background: #f1f5f9; color: var(--text); }
+        .btn-danger { background: var(--danger); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); }
+        .btn-danger:hover { background: #dc2626; }
+
+        /* ESTILOS DEL BOTON Y MODAL ADMIN */
+        .btn-admin { 
+            background: #8e44ad; color: white; border: none; padding: 12px; border-radius: 10px; 
+            cursor: pointer; font-weight: bold; font-size: 13px; text-transform: uppercase; width: 100%; 
+            transition: all 0.3s; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;
+            box-shadow: 0 4px 12px rgba(142, 68, 173, 0.3);
+        }
+        .btn-admin:hover { background: #732d91; transform: translateY(-2px); }
+        .modal-overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(15, 23, 42, 0.8); z-index: 10000; justify-content: center; align-items: center; 
+            backdrop-filter: blur(4px); 
+        }
+        .modal-content { 
+            background: white; padding: 25px; border-radius: 16px; width: 90%; max-width: 350px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative; border-top: 6px solid #8e44ad; 
+        }
+        .btn-close-modal { 
+            position: absolute; top: 12px; right: 15px; background: none; border: none; 
+            font-size: 20px; cursor: pointer; color: #64748b; transition: 0.2s; 
+        }
+        .btn-close-modal:hover { color: #0f172a; }
+
+        /* --- UTILIDADES --- */
+        .alert-error { 
+            background: #fef2f2; color: var(--danger); padding: 12px; border-radius: 10px; 
+            font-size: 13px; font-weight: 700; display: none; margin-bottom: 15px; border: 1px solid #fca5a5; text-align: center; 
+        }
+        .pegado-exito { animation: pulseGreen 0.6s ease; background-color: #ecfdf5 !important; border-color: #10b981 !important; }
+        @keyframes pulseGreen { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        
+        #notification-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .notification { 
+            background: white; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px;
+            animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-left: 4px solid var(--info);
+        }
+        .notif-success { border-left-color: var(--success); }
+        .notif-error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+
+        /* --- LOGIN OVERLAY --- */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg);
+            z-index: 10000; display: flex; justify-content: center; align-items: center;
+        }
+        .login-box {
+            background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            width: 100%; max-width: 350px; text-align: center;
+        }
+        .login-box h1 { margin: 0 0 5px 0; color: var(--primary-dark); font-size: 24px; }
+        .login-box p { color: var(--text-light); font-size: 14px; margin-bottom: 25px; }
     </style>
 </head>
 <body>
 
-<div id="loader">🔄 Sincronizando con la nube...</div>
-
-<div id="modal-overlay" class="modal-overlay">
-    <div id="modal-sede" class="modal-box hidden">
-        <button class="modal-close" onclick="cerrarModales()">✖</button>
-        <h2 style="margin-top:0">🏢 Crear Nueva Sede</h2>
-        <label>Nombre del Local / Sede</label>
-        <input type="text" id="nueva-sede-nombre" placeholder="Ej: Sucursal Centro">
-        <button class="btn" style="background-color:var(--info);" onclick="guardarSede()">Guardar Sede</button>
-    </div>
-
-    <div id="modal-usuario" class="modal-box hidden">
-        <button class="modal-close" onclick="cerrarModales()">✖</button>
-        <h2 style="margin-top:0">👥 Nuevo Usuario</h2>
-        <label>Correo Electrónico</label>
-        <input type="email" id="nuevo-usu-email" placeholder="usuario@gmail.com">
-        <label>Contraseña</label>
-        <input type="password" id="nuevo-usu-pass" placeholder="Mínimo 6 caracteres">
-        <label>Rol de Acceso</label>
-        <select id="nuevo-usu-rol" onchange="toggleSedeUsuario()">
-            <option value="user">Usuario de Local (Restringido)</option>
-            <option value="admin">Administrador (Total)</option>
-        </select>
-        <div id="div-nuevo-usu-sede">
-            <label>Asignar a Sede</label>
-            <select id="nuevo-usu-sede"></select>
-        </div>
-        <button class="btn" style="background-color:var(--accent);" onclick="guardarUsuario()">Crear Usuario</button>
-    </div>
-</div>
-
-<div id="login-screen">
+<div id="login-overlay">
     <div class="login-box">
-        <div class="login-logo">📊</div>
-        <h1>VPM</h1>
-        <p class="subtitle">Control de Caja Profesional</p>
-        
-        <div id="login-error"></div>
-        
-        <div class="input-group">
-            <input type="email" id="email" placeholder="Correo electrónico" required>
+        <h1>VPM Caja Pro</h1>
+        <p>Inicia sesión para continuar</p>
+        <div class="input-group" style="text-align: left;">
+            <label>Usuario o Email</label>
+            <input type="text" id="login-email" placeholder="ej: cajero1 o admin@vpm.com">
         </div>
-        
-        <div class="input-group">
-            <input type="password" id="password" placeholder="Contraseña" required>
+        <div class="input-group" style="text-align: left;">
+            <label>Contraseña</label>
+            <input type="password" id="login-password" placeholder="••••••••">
         </div>
-        
-        <button onclick="iniciarSesion()">Entrar al Sistema</button>
-    </div>
-    
-    <div class="login-footer">
-        Creado y desarrollado por <strong>"José R."</strong> y <strong>"Samuel A."</strong>
+        <button class="btn btn-pdf" onclick="login()">Iniciar Sesión</button>
+        <div id="login-error" class="alert-error" style="margin-top: 15px;"></div>
     </div>
 </div>
 
-<div id="top-bar" class="top-nav hidden">
-    <div class="user-info">
-        <div style="background:#f1f5f9; width:35px; height:35px; border-radius:8px; display:flex; align-items:center; justify-content:center; border:1px solid #e2e8f0;">👤</div>
-        <div>
-            <span id="user-display">Usuario</span><br>
-            <span id="role-display" class="role-badge">Local</span>
+<div id="notification-container"></div>
+
+<div class="main-layout" id="app-content" style="display: none;">
+    <div class="panel panel-ingresos">
+        <h2>💰 Ingresos Banesco</h2>
+        <div id="msg-error-global" class="alert-error"></div>
+        
+        <div class="filtros-box">
+            <select id="bs-sede">
+                <option>Belleza Principal</option><option>Beauty Principal</option>
+                <option>Gran Bazar</option><option>Libertador</option>
+            </select>
+        </div>
+
+        <button class="btn-pegar-unico" onclick="pegarTodoDesdePortapapeles()">📋 Autocompletar desde Portapapeles</button>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 10px;">
+            <div class="input-group">
+                <label>Monto</label>
+                <input type="text" id="bs-monto" placeholder="0,00">
+            </div>
+            <div class="input-group">
+                <label>Referencia</label>
+                <input type="text" id="bs-ref" placeholder="Ej: 60610518732">
+            </div>
+        </div>
+        
+        <button id="btn-bs" class="btn btn-ingreso" onclick="registrarBs()">Guardar Ingreso</button>
+        
+        <hr style="border:0; border-top:1px dashed var(--border); margin:15px 0;">
+        
+        <div class="filtros-box">
+            <select id="filtro-sede-bs" onchange="actualizarUI()" style="flex:1">
+                <option value="Todas">Todas las Sedes</option>
+                <option>Belleza Principal</option><option>Beauty Principal</option>
+                <option>Gran Bazar</option><option>Libertador</option>
+            </select>
+            <input type="text" id="buscador-bs" onkeyup="actualizarUI()" placeholder="Buscar Ref..." style="flex:1">
+        </div>
+        <div class="scroll-area" id="lista-bs"></div>
+    </div>
+
+    <div class="panel panel-gastos">
+        <h2>💸 Registro de Gastos</h2>
+        
+        <div class="filtros-box">
+            <select id="g-sede">
+                <option>Belleza Principal</option><option>Beauty Principal</option>
+                <option>Gran Bazar</option><option>Libertador</option><option>General / Adm</option>
+            </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="input-group">
+                <label>Monto</label>
+                <input type="text" id="g-monto" placeholder="0.00">
+            </div>
+            <div class="input-group">
+                <label>Moneda</label>
+                <select id="g-moneda">
+                    <option value="BS">Bolívares (Bs)</option>
+                    <option value="USD">Dólares ($)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Categoría</label>
+            <select id="g-tipo">
+                <option>Nómina / Pagos a Personal</option>
+                <option>Insumos / Mercancía</option>
+                <option>Servicios Básicos (Luz, Agua, Internet)</option>
+                <option>Mantenimiento / Reparaciones</option>
+                <option>Comida / Refrigerios</option>
+                <option>Otros Gastos</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Descripción / Concepto</label>
+            <input type="text" id="g-concepto" placeholder="Ej: Pago quincena Maria">
+        </div>
+
+        <button id="btn-gasto" class="btn btn-gasto" onclick="registrarGasto()">Registrar Gasto</button>
+        
+        <hr style="border:0; border-top:1px dashed var(--border); margin:15px 0;">
+        <div class="filtros-box">
+            <select id="filtro-sede-g" onchange="actualizarUI()">
+                <option value="Todas">Todas las Sedes</option>
+                <option>Belleza Principal</option><option>Beauty Principal</option>
+                <option>Gran Bazar</option><option>Libertador</option><option>General / Adm</option>
+            </select>
+        </div>
+        <div class="scroll-area" id="lista-gastos"></div>
+    </div>
+
+    <div class="panel panel-resumen">
+        <h2>📊 Resumen del Día</h2>
+        
+        <div class="total-card bg-ingresos">
+            <span class="total-title">Total Ingresos Banesco (BS)</span>
+            <span class="total-monto" id="tot-ingresos">Bs. 0,00</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="total-card bg-gastos">
+                <span class="total-title">Gastos (BS)</span>
+                <span class="total-monto" id="tot-gastos-bs" style="font-size:1.3rem;">Bs. 0,00</span>
+            </div>
+            <div class="total-card bg-gastos" style="background: linear-gradient(135deg, #e11d48, #be123c);">
+                <span class="total-title">Gastos ($)</span>
+                <span class="total-monto" id="tot-gastos-usd" style="font-size:1.3rem;">$ 0.00</span>
+            </div>
+        </div>
+        
+        <div class="scroll-area" id="resumen-final" style="margin-bottom: 15px;"></div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-pdf" onclick="exportarPDF()">📄 Descargar Reporte PDF</button>
+            <button class="btn btn-banco" onclick="abrirBanco()">🏦 Acceso a Banesco</button>
+            <button class="btn-admin" onclick="abrirModalAdmin()">👤 Crear Cajero</button>
+            <button class="btn btn-reset" onclick="logout()">🚪 Desconectar</button>
+            <button class="btn btn-danger" style="font-size: 11px; padding: 10px;" onclick="reiniciarDia()">🗑️ LIMPIAR TODO (Solo Local)</button>
         </div>
     </div>
-    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión 👋</button>
 </div>
 
-<div id="app-layout">
-    <div class="main-layout">
-        
-        <div class="panel panel-ingresos">
-            <h2>Transacciones Bolívares</h2>
-            <div id="msg-error-global" class="alert-critica"></div>
-            
-            <label>Monto (Bs.)</label>
-            <input type="text" id="bs-monto" placeholder="0,00">
-            
-            <label>Número de Referencia</label>
-            <input type="text" id="bs-ref" placeholder="Ej: 8844">
-            
-            <button class="btn-pegar-unico" onclick="pegarTodoDesdePortapapeles()">📋 Pegar Banesco</button>
-            
-            <label>Sede / Local</label>
-            <select id="bs-sede"></select>
-            <button id="btn-bs" class="btn btn-ingreso" onclick="registrarBs()">Guardar Registro Bs.</button>
-            
-            <hr style="border:0; border-top:1px solid #e2e8f0; margin:15px 0;">
-            
-            <div class="filtros-box">
-                <div class="filtros-grid">
-                    <select id="filtro-sede" onchange="renderUI()"></select>
-                    <input type="text" id="buscador" onkeyup="renderUI()" placeholder="🔍 Buscar Referencia...">
-                </div>
-            </div>
-            <div class="scroll-area" id="lista-bs"></div>
+<div id="modal-admin" class="modal-overlay">
+    <div class="modal-content">
+        <button class="btn-close-modal" onclick="cerrarModalAdmin()">✖</button>
+        <h2 style="color: #8e44ad; text-align: left; margin-bottom: 20px; font-size: 1.2rem; margin-top: 0;">Registrar Nuevo Usuario</h2>
+
+        <div class="input-group">
+            <label>Nombre de Usuario (Sin espacios)</label>
+            <input type="text" id="nuevo-username" placeholder="ej: maria_caja1" autocomplete="off">
         </div>
 
-        <div class="panel panel-cuadre" id="panel-cuadre">
-            <h2>Cierres Punto / USD</h2>
-            <div id="form-cuadre" style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
-                <label>Tipo de Cierre</label>
-                <select id="c-tipo">
-                    <option value="Punto">Cierre de Punto (Bs)</option>
-                    <option value="Dólares">Efectivo ($)</option>
-                </select>
-                <label>Monto Total</label>
-                <input type="text" id="c-monto" placeholder="0,00">
-                <label>Sede</label>
-                <select id="c-sede"></select>
-                <button id="btn-cuadre" class="btn btn-cuadre" onclick="registrarCuadre()">Registrar Cierre Diario</button>
-            </div>
-            <div class="scroll-area" id="lista-cuadre"></div>
+        <div class="input-group">
+            <label>Contraseña (Mínimo 6 caracteres)</label>
+            <input type="password" id="nuevo-password" placeholder="••••••">
         </div>
 
-        <div class="panel panel-gastos">
-            <h2>Gastos y Pagos</h2>
-            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
-                <label>Tipo de Operación</label>
-                <select id="g-tipo">
-                    <option value="Gasto">Gasto</option>
-                    <option value="Nómina">Nómina</option>
-                    <option value="Cambio de divisas" id="opt-divisas" style="display:none;">Cambio de divisas</option>
-                </select>
-                
-                <label>Concepto / Descripción</label>
-                <input type="text" id="g-concepto" placeholder="Ej: Mantenimiento, Nómina...">
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div>
-                        <label>Monto</label>
-                        <input type="text" id="g-monto" placeholder="0,00">
-                    </div>
-                    <div>
-                        <label>Moneda</label>
-                        <select id="g-moneda">
-                            <option value="Bs">Bs.</option>
-                            <option value="USD">$ USD</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <label>Sede / Local</label>
-                <select id="g-sede"></select>
-                <button class="btn btn-gastos-guardar" onclick="registrarGasto()">Guardar Operación</button>
-            </div>
-            <div class="scroll-area" id="lista-gastos"></div>
+        <div class="input-group">
+            <label>Rol / Permiso</label>
+            <select id="nuevo-rol">
+                <option value="cajero">Cajero Base</option>
+                <option value="admin">Administrador</option>
+            </select>
         </div>
 
-        <div class="panel panel-resumen">
-            <h2>📊 Resumen Consolidado</h2>
-            <div class="total-box bg-reg"><small>TOTAL REFERENCIAS (BS)</small><div id="tot-reg" class="total-amount">Bs. 0,00</div></div>
-            <div class="total-box bg-pto"><small>TOTAL CIERRE PUNTOS (BS)</small><div id="tot-pto" class="total-amount">Bs. 0,00</div></div>
-            <div class="total-box bg-usd"><small>TOTAL EFECTIVO (USD)</small><div id="tot-usd" class="total-amount">$ 0.00</div></div>
-            
-            <div class="scroll-area" id="resumen-final" style="margin-top: 10px;"></div>
-            
-            <div style="margin-top:auto;">
-                <button id="btn-crear-sede" class="btn hidden" style="background-color:#059669; margin-top:10px;" onclick="abrirModalSedes()">🏢 Crear Nueva Sede</button>
-                <button id="btn-crear-usuario" class="btn hidden" style="background-color:#4f46e5; margin-top:10px;" onclick="abrirModalUsuarios()">👥 Crear Nuevo Usuario</button>
-
-                <button class="btn btn-banco" onclick="abrirBanco()">🏦 Abrir Portal Banesco</button>
-                <button id="btn-pdf" class="btn btn-pdf hidden" onclick="exportarPDF()">📥 Descargar Reporte Pago movil</button>
-                
-                <button id="btn-pdf-gastos" class="btn hidden" style="background-color:var(--gastos); margin-top:10px;" onclick="exportarPDFGastos()">📄 Descargar Reporte Gastos</button>
-
-                <button id="btn-reset" class="btn btn-reset hidden" onclick="reiniciarDia()">🗑️ Reiniciar Día (Borrar Todo)</button>
-            </div>
-        </div>
+        <button class="btn-admin" style="margin-top: 5px;" onclick="ejecutarRegistroUsuario()">REGISTRAR USUARIO</button>
     </div>
 </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-    import { getDatabase, ref, push, set, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+    // --- IMPORTACIONES DE FIREBASE ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, getAuth as getAuthSecondary, onAuthStateChanged, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, query, orderBy, deleteDoc, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
+    // --- CONFIGURACIÓN DE FIREBASE (Reemplaza con tus datos reales) ---
     const firebaseConfig = {
-        apiKey: "AIzaSyDZrb6Bt4VQvkcKZO678VqnuLQBeQimTWY",
-        authDomain: "fanaticavpm.firebaseapp.com",
-        databaseURL: "https://fanaticavpm-default-rtdb.firebaseio.com",
-        projectId: "fanaticavpm",
-        storageBucket: "fanaticavpm.firebasestorage.app",
-        messagingSenderId: "767438396204",
-        appId: "1:767438396204:web:5982e46ab3d9f32d496a89",
-        measurementId: "G-64607DK1WK"
+      apiKey: "AIzaSyA_TU_API_KEY_AQUI",
+      authDomain: "tu-proyecto.firebaseapp.com",
+      projectId: "tu-proyecto",
+      storageBucket: "tu-proyecto.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef"
     };
 
+    // Inicializar Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getDatabase(app);
+    const db = getFirestore(app);
 
-    const secondaryApp = initializeApp(firebaseConfig, "Secondary");
-    const secondaryAuth = getAuth(secondaryApp);
+    // Inicializar app secundaria para creación de usuarios (No desloguea al admin)
+    const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
+    const secondaryAuth = getAuthSecondary(secondaryApp);
 
-    const ROLES_FALLBACK = {
-        'belleza@gmail.com': { role: 'user', sede: 'Belleza Principal' },
-        'beauty@gmail.com': { role: 'user', sede: 'Beauty Principal' },
-        'bazar@gmail.com': { role: 'user', sede: 'Gran Bazar' },
-        'libertador@gmail.com': { role: 'user', sede: 'Libertador' },
-        'samuel@gmail.com': { role: 'admin', sede: 'Todas' },
-        'jose@gmail.com': { role: 'admin', sede: 'Todas' }
-    };
-
-    const SEDES_DEFAULT = ["Belleza Principal", "Beauty Principal", "Gran Bazar", "Libertador"];
-
-    let currentUserProfile = null;
-    let localDB = { bs: [], cuadre: [], gastos: [] };
-    let editandoBsID = null;
-    let sedes = [...SEDES_DEFAULT]; 
+    // --- VARIABLES GLOBALES ---
+    const sedes = ["Belleza Principal", "Beauty Principal", "Gran Bazar", "Libertador", "General / Adm"];
+    const fmtBs = (n) => "Bs. " + parseFloat(n).toLocaleString('es-VE', { minimumFractionDigits: 2 });
+    const fmtUsd = (n) => "$ " + parseFloat(n).toLocaleString('en-US', { minimumFractionDigits: 2 });
     
-    const fmtBs = (n) => "Bs. " + n.toLocaleString('es-VE', { minimumFractionDigits: 2 });
-    const fmtUsd = (n) => "$ " + n.toLocaleString('en-US', { minimumFractionDigits: 2 });
-    const showLoader = (show) => document.getElementById('loader').style.display = show ? 'block' : 'none';
+    let localDB = { bs: [], gastos: [] };
+    let editandoBsID = null;
+    let currentUser = null;
+    let unsubscribeBs = null;
+    let unsubscribeGastos = null;
 
-    window.iniciarSesion = () => {
-        const e = document.getElementById('email').value.toLowerCase().trim();
-        const p = document.getElementById('password').value;
-        const err = document.getElementById('login-error');
-        err.style.display = "none";
-        
-        if(!e || !p) { err.innerText = "⚠️ Por favor, rellene todos los campos."; err.style.display = "block"; return; }
-
-        showLoader(true);
-        signInWithEmailAndPassword(auth, e, p).catch(error => {
-            showLoader(false);
-            let msg = "❌ Error de autenticación.";
-            if(error.code === 'auth/wrong-password') msg = "❌ Contraseña incorrecta.";
-            if(error.code === 'auth/user-not-found') msg = "❌ Usuario no encontrado.";
-            err.innerText = msg; err.style.display = "block";
-        });
+    // --- SISTEMA DE NOTIFICACIONES ---
+    window.showNotification = (message, type = 'success') => {
+        const container = document.getElementById('notification-container');
+        const notif = document.createElement('div');
+        notif.className = `notification notif-${type}`;
+        notif.innerHTML = `${type === 'success' ? '✅' : '❌'} <span>${message}</span>`;
+        container.appendChild(notif);
+        setTimeout(() => {
+            notif.style.animation = 'slideOut 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
+            setTimeout(() => notif.remove(), 300);
+        }, 3000);
     };
 
-    window.cerrarSesion = () => signOut(auth);
-
-    onAuthStateChanged(auth, async (user) => {
+    // --- AUTENTICACIÓN ---
+    onAuthStateChanged(auth, (user) => {
+        const overlay = document.getElementById('login-overlay');
+        const appContent = document.getElementById('app-content');
         if (user) {
-            const email = user.email.toLowerCase();
-            const emailKey = email.replace(/\./g, '_'); 
-            
-            showLoader(true);
-            let roleSnap = await get(ref(db, `vpm/roles/${emailKey}`));
-            let profile = roleSnap.val();
-
-            if (!profile) {
-                profile = ROLES_FALLBACK[email];
-                if (profile) {
-                    await set(ref(db, `vpm/roles/${emailKey}`), profile);
-                } else {
-                    showLoader(false); alert("Usuario no autorizado por el administrador."); signOut(auth); return;
-                }
-            }
-
-            currentUserProfile = profile;
-
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('top-bar').classList.remove('hidden');
-            document.getElementById('app-layout').style.display = 'block';
-            
-            document.getElementById('user-display').innerText = email;
-            const badge = document.getElementById('role-display');
-            
-            document.getElementById('email').value = ''; document.getElementById('password').value = '';
-
-            const optDivisas = document.getElementById('opt-divisas');
-            if (currentUserProfile.role === 'admin' || currentUserProfile.sede === 'Belleza Principal' || currentUserProfile.sede === 'Gran Bazar') {
-                optDivisas.style.display = 'block';
-            } else {
-                optDivisas.style.display = 'none';
-            }
-
-            if (currentUserProfile.role === 'admin') {
-                badge.innerText = 'Administrador'; badge.classList.add('admin');
-                document.getElementById('btn-pdf').classList.remove('hidden');
-                document.getElementById('btn-pdf-gastos').classList.remove('hidden');
-                document.getElementById('btn-reset').classList.remove('hidden');
-                document.getElementById('btn-crear-sede').classList.remove('hidden');
-                document.getElementById('btn-crear-usuario').classList.remove('hidden');
-                
-                document.getElementById('form-cuadre').classList.remove('disabled-panel');
-                document.getElementById('bs-sede').disabled = false;
-                document.getElementById('c-sede').disabled = false;
-                document.getElementById('g-sede').disabled = false;
-                document.getElementById('filtro-sede').disabled = false;
-            } else {
-                badge.innerText = currentUserProfile.sede; badge.classList.remove('admin');
-                document.getElementById('btn-pdf').classList.add('hidden');
-                document.getElementById('btn-pdf-gastos').classList.add('hidden');
-                document.getElementById('btn-reset').classList.add('hidden');
-                document.getElementById('btn-crear-sede').classList.add('hidden');
-                document.getElementById('btn-crear-usuario').classList.add('hidden');
-                
-                document.getElementById('bs-sede').disabled = true;
-                document.getElementById('filtro-sede').disabled = true;
-                document.getElementById('g-sede').disabled = true;
-                document.getElementById('form-cuadre').classList.add('disabled-panel');
-            }
-            initRealtimeListeners();
+            currentUser = user;
+            overlay.style.display = 'none';
+            appContent.style.display = 'grid';
+            iniciarSincronizacion();
         } else {
-            document.getElementById('login-screen').style.display = 'flex';
-            document.getElementById('top-bar').classList.add('hidden');
-            document.getElementById('app-layout').style.display = 'none';
-            currentUserProfile = null; showLoader(false);
+            currentUser = null;
+            overlay.style.display = 'flex';
+            appContent.style.display = 'none';
+            if (unsubscribeBs) unsubscribeBs();
+            if (unsubscribeGastos) unsubscribeGastos();
         }
     });
 
-    function initRealtimeListeners() {
-        const bsRef = ref(db, 'vpm/bs');
-        const cuadreRef = ref(db, 'vpm/cuadre');
-        const gastosRef = ref(db, 'vpm/gastos');
-        const sedesRef = ref(db, 'vpm/sedes_list');
-
-        onValue(sedesRef, (snapshot) => {
-            let dbSedes = [];
-            if(snapshot.exists()) {
-                snapshot.forEach(child => {
-                    const val = child.val();
-                    if(val && val.nombre) dbSedes.push(val.nombre);
-                    else if(typeof val === 'string') dbSedes.push(val); 
-                });
-            }
-            sedes = [...new Set([...SEDES_DEFAULT, ...dbSedes])];
-            actualizarSelectsSedes();
-            renderUI();
-        });
-
-        onValue(bsRef, (snapshot) => {
-            localDB.bs = [];
-            snapshot.forEach(child => { localDB.bs.push({ id: child.key, ...child.val() }); });
-            localDB.bs.reverse(); renderUI(); showLoader(false);
-        });
-
-        onValue(cuadreRef, (snapshot) => {
-            localDB.cuadre = [];
-            snapshot.forEach(child => { localDB.cuadre.push({ id: child.key, ...child.val() }); });
-            localDB.cuadre.reverse(); renderUI();
-        });
-
-        onValue(gastosRef, (snapshot) => {
-            localDB.gastos = [];
-            snapshot.forEach(child => { localDB.gastos.push({ id: child.key, ...child.val() }); });
-            localDB.gastos.reverse(); renderUI();
-        });
-    }
-
-    function actualizarSelectsSedes() {
-        const htmlSedes = sedes.map(s => `<option value="${s}">${s}</option>`).join('');
-        document.getElementById('bs-sede').innerHTML = htmlSedes;
-        document.getElementById('c-sede').innerHTML = htmlSedes;
-        document.getElementById('g-sede').innerHTML = htmlSedes;
-        document.getElementById('filtro-sede').innerHTML = `<option value="Todas">Todas las Sedes</option>` + htmlSedes;
-        document.getElementById('nuevo-usu-sede').innerHTML = htmlSedes;
+    window.login = async () => {
+        const emailInput = document.getElementById('login-email');
+        const passwordInput = document.getElementById('login-password');
+        const errorDiv = document.getElementById('login-error');
         
-        if (currentUserProfile && currentUserProfile.role !== 'admin') {
-            document.getElementById('bs-sede').value = currentUserProfile.sede;
-            document.getElementById('g-sede').value = currentUserProfile.sede;
-            document.getElementById('filtro-sede').value = currentUserProfile.sede;
+        let email = emailInput.value.trim();
+        const password = passwordInput.value;
+        
+        if (!email || !password) {
+            errorDiv.innerText = "Ingresa usuario y contraseña";
+            errorDiv.style.display = 'block';
+            return;
         }
-    }
 
-    window.abrirModalSedes = () => {
-        if(currentUserProfile?.role !== 'admin') return;
-        document.getElementById('modal-overlay').style.display = 'flex';
-        document.getElementById('modal-sede').classList.remove('hidden');
-        document.getElementById('modal-usuario').classList.add('hidden');
-    };
+        // Si el usuario no escribe arroba, asume que es el correo fantasma
+        if(!email.includes('@')) {
+            email = `${email.toLowerCase()}@vpmcaja.com`;
+        }
 
-    window.abrirModalUsuarios = () => {
-        if(currentUserProfile?.role !== 'admin') return;
-        document.getElementById('modal-overlay').style.display = 'flex';
-        document.getElementById('modal-usuario').classList.remove('hidden');
-        document.getElementById('modal-sede').classList.add('hidden');
-    };
-
-    window.cerrarModales = () => {
-        document.getElementById('modal-overlay').style.display = 'none';
-    };
-
-    window.toggleSedeUsuario = () => {
-        const rol = document.getElementById('nuevo-usu-rol').value;
-        document.getElementById('div-nuevo-usu-sede').style.display = rol === 'admin' ? 'none' : 'block';
-    };
-
-    /* --- CORRECCION AL CREAR SEDE --- */
-    window.guardarSede = () => {
-        if(currentUserProfile?.role !== 'admin') return;
-        const nombre = document.getElementById('nueva-sede-nombre').value.trim();
-        if(!nombre) return alert("Ingrese un nombre para la sede.");
-        if(sedes.map(s=>s.toLowerCase()).includes(nombre.toLowerCase())) return alert("Esta sede ya existe en el sistema.");
-        
-        showLoader(true);
-        // Se envía como objeto con clave 'nombre' para que Firebase lo reconozca correctamente al iterarlo
-        const nuevaSedeRef = push(ref(db, 'vpm/sedes_list'));
-        set(nuevaSedeRef, { nombre: nombre }).then(() => {
-            alert("Sede creada exitosamente.");
-            document.getElementById('nueva-sede-nombre').value = '';
-            cerrarModales(); showLoader(false);
-        }).catch(e => {
-            alert("Error: " + e.message);
-            showLoader(false);
-        });
-    };
-
-    window.guardarUsuario = async () => {
-        if(currentUserProfile?.role !== 'admin') return;
-        const email = document.getElementById('nuevo-usu-email').value.trim().toLowerCase();
-        const password = document.getElementById('nuevo-usu-pass').value;
-        const rol = document.getElementById('nuevo-usu-rol').value;
-        let sede = document.getElementById('nuevo-usu-sede').value;
-
-        if(!email || !password) return alert("Por favor complete todos los datos.");
-        if(password.length < 6) return alert("La contraseña debe tener al menos 6 caracteres.");
-        if(rol === 'admin') sede = 'Todas';
-
-        showLoader(true);
         try {
-            await createUserWithEmailAndPassword(secondaryAuth, email, password);
-            const emailKey = email.replace(/\./g, '_');
-            await set(ref(db, `vpm/roles/${emailKey}`), { role: rol, sede: sede, email: email });
-            
-            alert("✅ Usuario creado exitosamente.");
-            document.getElementById('nuevo-usu-email').value = '';
-            document.getElementById('nuevo-usu-pass').value = '';
-            cerrarModales();
-            await signOut(secondaryAuth);
+            await signInWithEmailAndPassword(auth, email, password);
+            errorDiv.style.display = 'none';
+            emailInput.value = '';
+            passwordInput.value = '';
+            showNotification('Sesión iniciada correctamente', 'success');
         } catch (error) {
-            alert("❌ Error al crear usuario: " + error.message);
+            errorDiv.innerText = "Credenciales incorrectas";
+            errorDiv.style.display = 'block';
+            console.error(error);
         }
-        showLoader(false);
     };
 
-    window.registrarBs = () => {
-        const montoI = document.getElementById('bs-monto');
-        const refI = document.getElementById('bs-ref');
-        const monto = parseFloat(montoI.value.toString().replace(/[^\d,]/g, '').replace(',', '.')) || 0;
-        const refNum = refI.value.trim();
-        const sede = document.getElementById('bs-sede').value;
-        const msgError = document.getElementById('msg-error-global');
-        
-        if (!monto || !refNum) return alert("Faltan datos.");
-
-        const duplicado = localDB.bs.find(x => x.ref === refNum && x.id !== editandoBsID);
-        if (duplicado) {
-            msgError.innerText = `❌ ERROR: LA REFERENCIA ${refNum} YA EXISTE EN: ${duplicado.sede.toUpperCase()}`;
-            msgError.style.display = 'block'; window.scrollTo(0,0);
-            setTimeout(() => msgError.style.display = 'none', 8000); return;
+    window.logout = async () => {
+        if(confirm("¿Estás seguro de desconectar tu cuenta?")) {
+            await signOut(auth);
+            showNotification('Sesión cerrada', 'success');
         }
-
-        showLoader(true);
-        if (editandoBsID) {
-            update(ref(db, `vpm/bs/${editandoBsID}`), { monto, ref: refNum, sede })
-                .then(() => { editandoBsID = null; document.getElementById('btn-bs').innerText = "Guardar Registro Bs."; });
-        } else {
-            const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            push(ref(db, 'vpm/bs'), { monto, ref: refNum, sede, hora, timestamp: Date.now() });
-        }
-        
-        montoI.value = ''; refI.value = ''; msgError.style.display = 'none'; refI.focus();
     };
 
-    window.registrarCuadre = () => {
-        if(currentUserProfile.role !== 'admin') return;
-        const montoI = document.getElementById('c-monto');
-        const tipo = document.getElementById('c-tipo').value;
-        const monto = parseFloat(montoI.value.toString().replace(/[^\d,]/g, '').replace(',', '.')) || 0;
-        const sede = document.getElementById('c-sede').value;
-        if (isNaN(monto) || monto <= 0) return alert("Monto inválido");
-        showLoader(true);
-        push(ref(db, 'vpm/cuadre'), { tipo, monto, sede, timestamp: Date.now() });
-        montoI.value = '';
+    // --- MODAL Y CREACIÓN DE USUARIOS (ADMIN) ---
+    window.abrirModalAdmin = () => {
+        document.getElementById('modal-admin').style.display = 'flex';
     };
 
-    window.registrarGasto = () => {
-        const tipo = document.getElementById('g-tipo').value;
-        const concepto = document.getElementById('g-concepto').value.trim();
-        const montoI = document.getElementById('g-monto');
-        const monto = parseFloat(montoI.value.toString().replace(/[^\d,]/g, '').replace(',', '.')) || 0;
-        const moneda = document.getElementById('g-moneda').value;
-        const sede = document.getElementById('g-sede').value;
+    window.cerrarModalAdmin = () => {
+        document.getElementById('modal-admin').style.display = 'none';
+        document.getElementById('nuevo-username').value = '';
+        document.getElementById('nuevo-password').value = '';
+    };
 
-        if (!concepto || monto <= 0) return alert("Faltan datos o monto inválido en la sección de Gastos.");
+    window.ejecutarRegistroUsuario = async () => {
+        const username = document.getElementById('nuevo-username').value.trim();
+        const password = document.getElementById('nuevo-password').value;
+        const rol = document.getElementById('nuevo-rol').value;
 
-        showLoader(true);
-        const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        push(ref(db, 'vpm/gastos'), { tipo, concepto, monto, moneda, sede, hora, timestamp: Date.now() })
-            .then(() => {
-                document.getElementById('g-concepto').value = '';
-                montoI.value = '';
-                showLoader(false);
+        if (!username || !password) {
+            return showNotification("Llena todos los campos.", "error");
+        }
+        if (password.length < 6) {
+            return showNotification("La contraseña debe tener mínimo 6 caracteres.", "error");
+        }
+
+        const emailFalso = `${username.toLowerCase()}@vpmcaja.com`;
+        const btn = document.querySelector('#modal-admin .btn-admin');
+        const originalText = btn.innerText;
+        btn.innerText = "Registrando...";
+        btn.disabled = true;
+
+        try {
+            // Se usa secondaryAuth para NO desloguear al admin
+            const userCredential = await createUserWithEmailAndPassword(secondaryAuth, emailFalso, password);
+            const newUser = userCredential.user;
+
+            await setDoc(doc(db, "users", newUser.uid), {
+                username: username,
+                email: emailFalso,
+                role: rol,
+                createdAt: new Date().toISOString()
             });
-    };
 
-    window.gestionarBs = (id) => {
-        const i = localDB.bs.find(x => x.id === id); if(!i) return;
-        if (currentUserProfile.role !== 'admin' && i.sede !== currentUserProfile.sede) { alert("No tienes permisos."); return; }
+            await signOut(secondaryAuth); // Cerramos la sesión secundaria por seguridad
 
-        if (confirm(`Referencia: ${i.ref}\nOK para EDITAR / Cancelar para ELIMINAR`)) {
-            document.getElementById('bs-monto').value = i.monto.toLocaleString('es-VE', { minimumFractionDigits: 2 });
-            document.getElementById('bs-ref').value = i.ref;
-            if(currentUserProfile.role === 'admin') document.getElementById('bs-sede').value = i.sede;
-            editandoBsID = id; document.getElementById('btn-bs').innerText = "ACTUALIZAR REGISTRO"; window.scrollTo(0,0);
-        } else if (confirm("¿Seguro que desea ELIMINAR este registro de la base de datos?")) {
-            showLoader(true); remove(ref(db, `vpm/bs/${id}`));
+            showNotification(`Usuario ${username} creado con éxito.`, "success");
+            window.cerrarModalAdmin();
+        } catch (error) {
+            console.error("Error al registrar:", error);
+            showNotification(error.message, "error");
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
         }
     };
 
-    window.eliminarC = (id) => {
-        if (currentUserProfile.role !== 'admin') return;
-        if (confirm("¿Seguro que desea ELIMINAR este cierre?")) { showLoader(true); remove(ref(db, `vpm/cuadre/${id}`)); }
-    };
-
-    window.eliminarGasto = (id) => {
-        const i = localDB.gastos.find(x => x.id === id); if(!i) return;
-        if (currentUserProfile.role !== 'admin' && i.sede !== currentUserProfile.sede) { alert("No tienes permisos."); return; }
-        if (confirm("¿Seguro que desea ELIMINAR esta operación de Gasto/Pago?")) { showLoader(true); remove(ref(db, `vpm/gastos/${id}`)); }
-    };
-
-    window.reiniciarDia = () => {
-        if (currentUserProfile.role !== 'admin') return;
-        if (confirm("⚠️ ¿ESTÁS TOTALMENTE SEGURO?\nEsto borrará TODAS las transacciones y cierres de HOY en la Nube de forma IRREVERSIBLE.")) {
-            if (confirm("🔒 CONFIRMACIÓN FINAL: ¿Realmente quieres vaciar la base de datos global?")) {
-                showLoader(true); 
-                remove(ref(db, 'vpm/bs')); 
-                remove(ref(db, 'vpm/cuadre'));
-                remove(ref(db, 'vpm/gastos'));
-                alert("✅ Base de datos reiniciada satisfactoriamente.");
-            }
-        }
-    };
-
-    window.renderUI = () => {
-        const fSede = document.getElementById('filtro-sede').value;
-        const fRef = document.getElementById('buscador').value.toLowerCase();
-
-        const filtradosBs = localDB.bs.filter(i => (fSede === "Todas" || i.sede === fSede) && i.ref.toLowerCase().includes(fRef));
-        document.getElementById('lista-bs').innerHTML = filtradosBs.map(i => {
-            const canEdit = currentUserProfile.role === 'admin' || i.sede === currentUserProfile.sede;
-            return `<div class="item item-bs"><span class="item-sede-name">${i.sede}</span><span class="item-monto">${fmtBs(i.monto)}</span><span class="item-ref">Ref: ${i.ref}</span><div class="item-meta"><span class="time-label">${i.hora}</span>${canEdit ? `<button class="btn-edit" onclick="gestionarBs('${i.id}')">✏️</button>` : ''}</div></div>`;
-        }).join('');
-
-        document.getElementById('lista-cuadre').innerHTML = localDB.cuadre.map(i => `<div class="item item-cuadre"><span class="item-sede-name">${i.sede}</span><span class="item-monto">${i.tipo === 'Dólares' ? fmtUsd(i.monto) : fmtBs(i.monto)}</span><span class="item-ref">${i.tipo === 'Punto' ? 'Cierre Punto' : 'Efectivo USD'}</span>${currentUserProfile.role === 'admin' ? `<div class="item-meta"><button class="btn-del" onclick="eliminarC('${i.id}')">🗑️</button></div>` : ''}</div>`).join('');
-        
-        const filtradosGastos = localDB.gastos.filter(i => (fSede === "Todas" || i.sede === fSede));
-        document.getElementById('lista-gastos').innerHTML = filtradosGastos.map(i => {
-            const canEdit = currentUserProfile.role === 'admin' || i.sede === currentUserProfile.sede;
-            const formatMonto = i.moneda === 'USD' ? fmtUsd(i.monto) : fmtBs(i.monto);
-            return `<div class="item item-gastos"><span class="item-sede-name">${i.sede}</span><span class="item-monto">${formatMonto}</span><span class="item-ref">${i.tipo}: ${i.concepto}</span><div class="item-meta"><span class="time-label">${i.hora}</span>${canEdit ? `<button class="btn-del" onclick="eliminarGasto('${i.id}')">🗑️</button>` : ''}</div></div>`;
-        }).join('');
-
-        let tReg = 0, tPto = 0, tUsd = 0;
-        const resDiv = document.getElementById('resumen-final'); resDiv.innerHTML = '';
-        
-        sedes.forEach(s => {
-            const trSede = localDB.bs.filter(x => x.sede === s);
-            const rS = trSede.reduce((a,b) => a+b.monto, 0);
-            const pS = localDB.cuadre.filter(x => x.sede === s && x.tipo === 'Punto').reduce((a,b) => a+b.monto, 0);
-            const uS = localDB.cuadre.filter(x => x.sede === s && x.tipo === 'Dólares').reduce((a,b) => a+b.monto, 0);
-            tReg += rS; tPto += pS; tUsd += uS;
-            
-            const isLocked = currentUserProfile.role !== 'admin' && s !== currentUserProfile.sede;
-            
-            if (isLocked) {
-                resDiv.innerHTML += `
-                <div class="resumen-sede-card locked-sede">
-                    <div class="card-content" style="display:flex; width:100%; justify-content:space-between;">
-                        <div style="flex:1">
-                            <strong style="color:var(--primary-dark); font-size:13px;">${s}</strong>
-                            <div style="font-size:11px; color:var(--text-muted); margin-top:3px; line-height:1.4;">
-                                Refs: <b>Bs. 0,00</b><br>
-                                Punto: Bs. 0,00 | Efect: <span style="color:var(--accent); font-weight:700">$ 0.00</span>
-                            </div>
-                        </div>
-                        <div class="badge-cantidad">0</div>
-                    </div>
-                    <div class="locked-overlay">
-                        <span>🔒</span>
-                        <span>Sin Acceso</span>
-                    </div>
-                </div>`;
-            } else {
-                resDiv.innerHTML += `
-                <div class="resumen-sede-card">
-                    <div style="flex:1">
-                        <strong style="color:var(--primary-dark); font-size:13px;">${s}</strong>
-                        <div style="font-size:11px; color:var(--text-muted); margin-top:3px; line-height:1.4;">
-                            Refs: <b>${fmtBs(rS)}</b><br>
-                            Punto: ${fmtBs(pS)} | Efect: <span style="color:var(--accent); font-weight:700">${fmtUsd(uS)}</span>
-                        </div>
-                    </div>
-                    <div class="badge-cantidad">${trSede.length}</div>
-                </div>`;
-            }
+    // --- SINCRONIZACIÓN CON FIRESTORE ---
+    function iniciarSincronizacion() {
+        // Escuchar Ingresos
+        const qBs = query(collection(db, "ingresosBs"), orderBy("timestamp", "desc"));
+        unsubscribeBs = onSnapshot(qBs, (snapshot) => {
+            localDB.bs = [];
+            snapshot.forEach((doc) => {
+                localDB.bs.push({ fbId: doc.id, ...doc.data() });
+            });
+            actualizarUI();
         });
 
-        if(currentUserProfile.role === 'admin'){
-            document.getElementById('tot-reg').innerText = fmtBs(tReg); document.getElementById('tot-pto').innerText = fmtBs(tPto); document.getElementById('tot-usd').innerText = fmtUsd(tUsd);
-        } else {
-            const lockMsg = '<div class="mask-text">🔒 Permisos Insuficientes</div>';
-            document.getElementById('tot-reg').innerHTML = lockMsg; document.getElementById('tot-pto').innerHTML = lockMsg; document.getElementById('tot-usd').innerHTML = lockMsg;
+        // Escuchar Gastos
+        const qGastos = query(collection(db, "gastos"), orderBy("timestamp", "desc"));
+        unsubscribeGastos = onSnapshot(qGastos, (snapshot) => {
+            localDB.gastos = [];
+            snapshot.forEach((doc) => {
+                localDB.gastos.push({ fbId: doc.id, ...doc.data() });
+            });
+            actualizarUI();
+        });
+    }
+
+    // --- FUNCIONES DE UTILIDAD PARA MONTOS ---
+    function parsearMonto(texto) {
+        if (!texto) return 0;
+        texto = texto.toString().trim();
+        // Si el texto tiene punto y coma (ej. 1.500,50), formato venezolano
+        if (texto.includes(',') && texto.indexOf(',') > texto.indexOf('.')) {
+            return parseFloat(texto.replace(/\./g, '').replace(',', '.')) || 0;
+        }
+        // Si no, asume formato internacional (ej. 1500.50)
+        return parseFloat(texto.replace(/[^\d.]/g, '')) || 0;
+    }
+
+    // --- PEGAR DESDE PORTAPAPELES (Banesco) ---
+    window.pegarTodoDesdePortapapeles = async () => {
+        try {
+            const texto = await navigator.clipboard.readText();
+            procesarTextoBanesco(texto);
+        } catch(e) {
+            showNotification("No se pudo leer el portapapeles. Usa Ctrl+V manual", "error");
         }
     };
-
-    window.pegarTodoDesdePortapapeles = async () => {
-        try { const texto = await navigator.clipboard.readText(); procesarTextoBanesco(texto); } 
-        catch(e) { alert("No se pudo acceder al portapapeles. Pegue el texto manualmente."); }
-    };
-
+    
     function procesarTextoBanesco(textoCompleto) {
-        const inputRef = document.getElementById('bs-ref'); const inputMonto = document.getElementById('bs-monto');
-        inputRef.value = ''; inputMonto.value = '';
-        let refEncontrada = null, montoEncontrado = null;
+        const refI = document.getElementById('bs-ref');
+        const montoI = document.getElementById('bs-monto');
+        refI.value = ''; montoI.value = '';
         
+        let refEncontrada = null, montoEncontrado = null;
         const lineas = textoCompleto.split(/[\r\n]+/).map(l => l.trim()).filter(l => l);
+        
         if (lineas.length >= 2) {
             if (/^\d{8,}$/.test(lineas[0])) refEncontrada = lineas[0];
             if ((lineas[1].includes('.') || lineas[1].includes(',')) && !/^\d{8,}$/.test(lineas[1])) montoEncontrado = lineas[1];
         }
+        
         if (!refEncontrada || !montoEncontrado) {
             const partes = textoCompleto.replace(/[\r\n]+/g, ' ').trim().split(/\s+/).filter(p => p);
             if (partes.length >= 2) {
                 if (/^\d{8,}$/.test(partes[0]) && !refEncontrada) refEncontrada = partes[0];
-                if ((partes[1].includes('.') || partes[1].includes(',')) && !/^\d{8,}$/.test(partes[1]) && !montoEncontrado) montoEncontrado = partes[partes.length - 1];
+                if ((partes[1].includes('.') || partes[1].includes(',')) && !/^\d{8,}$/.test(partes[1]) && !montoEncontrado) montoEncontrado = partes[1];
             }
         }
         
-        let exitoCont = 0;
-        if (refEncontrada) { inputRef.value = refEncontrada; inputRef.classList.add('pegado-exito'); exitoCont++; setTimeout(()=>inputRef.classList.remove('pegado-exito'), 1000); }
-        if (montoEncontrado) { inputMonto.value = montoEncontrado; inputMonto.classList.add('pegado-exito'); exitoCont++; setTimeout(()=>inputMonto.classList.remove('pegado-exito'), 1000); }
+        if (refEncontrada) { refI.value = refEncontrada; refI.classList.add('pegado-exito'); }
+        if (montoEncontrado) { montoI.value = montoEncontrado; montoI.classList.add('pegado-exito'); }
         
-        if(exitoCont > 0) { if(exitoCont === 2) document.getElementById('btn-bs').focus(); } 
-        else { alert("No se reconoció el formato de Banesco."); }
+        setTimeout(() => {
+            refI.classList.remove('pegado-exito');
+            montoI.classList.remove('pegado-exito');
+        }, 1000);
+
+        if (refEncontrada || montoEncontrado) {
+            showNotification("Datos extraídos", "success");
+        } else {
+            showNotification("Formato no reconocido", "error");
+        }
     }
 
-    window.abrirBanco = () => { window.open('https://www.banesconline.com/Mantis/WebSite/login.aspx', 'banesco', 'width=1200,height=800'); };
-
-    /* --- GENERACION PDF TRANSACCIONES --- */
-    window.exportarPDF = () => {
-        if (currentUserProfile.role !== 'admin') return;
-        if (typeof window.jspdf === 'undefined') return alert('Error crítico: La librería PDF no está disponible.');
-        showLoader(true); const { jsPDF } = window.jspdf; const doc = new jsPDF();
+    // --- REGISTRO DE DATOS A FIRESTORE ---
+    window.registrarBs = async () => {
+        const montoI = document.getElementById('bs-monto');
+        const refI = document.getElementById('bs-ref');
+        const sede = document.getElementById('bs-sede').value;
+        const msgError = document.getElementById('msg-error-global');
         
-        doc.setFont("helvetica", "bold"); doc.setFontSize(20); doc.setTextColor(30, 41, 59); doc.text("VPM - REPORTE DE TRANSACCIONES", 14, 22);
-        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100); 
-        doc.text(`Fecha y Hora de emisión: ${new Date().toLocaleString('es-VE')}`, 14, 30); 
-        doc.text(`Generado por: ${auth.currentUser.email}`, 14, 35);
-        doc.setDrawColor(226, 232, 240); doc.line(14, 40, 196, 40);
-
-        doc.setFontSize(14); doc.setTextColor(59, 130, 246); doc.text("1. RESUMEN GENERAL POR SEDE", 14, 50);
-        const resumenCuerpo = sedes.map(s => {
-            const rS = localDB.bs.filter(x => x.sede === s).reduce((a,b) => a+b.monto, 0); const pS = localDB.cuadre.filter(x => x.sede === s && x.tipo === 'Punto').reduce((a,b) => a+b.monto, 0); const uS = localDB.cuadre.filter(x => x.sede === s && x.tipo === 'Dólares').reduce((a,b) => a+b.monto, 0);
-            return [s, fmtBs(rS), fmtBs(pS), fmtUsd(uS)];
-        });
-        doc.autoTable({ startY: 55, head: [['Sede / Local', 'Total Refs (Bs)', 'Cierre Punto (Bs)', 'Efectivo ($)']], body: resumenCuerpo, theme: 'striped', headStyles: { fillColor: [59, 130, 246], fontStyle: 'bold' }, styles: { font: 'helvetica', fontSize: 9, cellPadding: 4 }, columnStyles: { 0: { fontStyle: 'bold' } } });
+        const monto = parsearMonto(montoI.value);
+        const ref = refI.value.trim();
         
-        let finalY = doc.lastAutoTable.finalY + 15;
-        doc.setFontSize(14); doc.setTextColor(16, 185, 129); doc.text("2. DETALLE DE TRANSACCIONES PAGOMOVIL (BS)", 14, finalY);
-        const transCuerpo = localDB.bs.map(x => [x.sede, x.hora, x.ref, fmtBs(x.monto)]);
-        doc.autoTable({ startY: finalY + 8, head: [['Sede', 'Hora', 'Referencia', 'Monto Bs.']], body: transCuerpo, theme: 'grid', headStyles: { fillColor: [16, 185, 129] }, styles: { fontSize: 8 }, columnStyles: { 3: { halign: 'right', fontStyle: 'bold' } } });
+        if (!monto || !ref) return showNotification("Faltan datos de ingreso", "error");
 
-        finalY = doc.lastAutoTable.finalY + 15; doc.setFontSize(14); doc.setTextColor(139, 92, 246); doc.text("3. DETALLE DE CIERRES (PUNTO Y USD)", 14, finalY);
-        const cuadreCuerpo = localDB.cuadre.map(x => [x.sede, x.tipo === 'Punto' ? 'Cierre Punto (Bs)' : 'Efectivo ($)', x.tipo === 'Dólares' ? fmtUsd(x.monto) : fmtBs(x.monto)]);
-        doc.autoTable({ startY: finalY + 8, head: [['Sede', 'Tipo de Cierre', 'Monto']], body: cuadreCuerpo, theme: 'grid', headStyles: { fillColor: [139, 92, 246] }, styles: { fontSize: 8 }, columnStyles: { 2: { halign: 'right', fontStyle: 'bold' } } });
+        const duplicado = localDB.bs.find(x => x.ref === ref && x.fbId !== editandoBsID);
+        if (duplicado) {
+            msgError.innerText = `❌ LA REFERENCIA ${ref} YA EXISTE EN: ${duplicado.sede.toUpperCase()}`;
+            msgError.style.display = 'block';
+            setTimeout(() => msgError.style.display = 'none', 6000);
+            return;
+        }
 
-        showLoader(false); window.open(doc.output('bloburl'), '_blank');
+        const btn = document.getElementById('btn-bs');
+        btn.disabled = true;
+        btn.innerText = "Guardando...";
+
+        const hora = new Date().toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' });
+        const data = { monto, ref, sede, hora, timestamp: Date.now(), user: currentUser.email };
+
+        try {
+            if (editandoBsID) {
+                // Actualizar en Firestore NO implementado aún en este snippet, 
+                // para mantener la estructura simple, lo agregamos como nuevo y borramos el viejo
+                await deleteDoc(doc(db, "ingresosBs", editandoBsID));
+                await addDoc(collection(db, "ingresosBs"), data);
+                editandoBsID = null;
+            } else {
+                await addDoc(collection(db, "ingresosBs"), data);
+            }
+            montoI.value = ''; refI.value = '';
+            showNotification("Ingreso guardado en la nube", "success");
+        } catch (error) {
+            console.error(error);
+            showNotification("Error al guardar en la nube", "error");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Guardar Ingreso";
+        }
     };
 
-    /* --- GENERACION PDF GASTOS (NUEVO) --- */
-    window.exportarPDFGastos = () => {
-        if (currentUserProfile.role !== 'admin') return;
-        if (typeof window.jspdf === 'undefined') return alert('Error crítico: La librería PDF no está disponible.');
-        showLoader(true); const { jsPDF } = window.jspdf; const doc = new jsPDF();
+    window.registrarGasto = async () => {
+        const montoI = document.getElementById('g-monto');
+        const moneda = document.getElementById('g-moneda').value;
+        const tipo = document.getElementById('g-tipo').value;
+        const conceptoI = document.getElementById('g-concepto');
+        const sede = document.getElementById('g-sede').value;
         
-        doc.setFont("helvetica", "bold"); doc.setFontSize(20); doc.setTextColor(30, 41, 59); doc.text("VPM - REPORTE DE GASTOS Y NÓMINAS", 14, 22);
-        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100); 
-        doc.text(`Fecha y Hora de emisión: ${new Date().toLocaleString('es-VE')}`, 14, 30); 
-        doc.text(`Generado por: ${auth.currentUser.email}`, 14, 35);
-        doc.setDrawColor(226, 232, 240); doc.line(14, 40, 196, 40);
+        const monto = parsearMonto(montoI.value);
+        const concepto = conceptoI.value.trim();
 
-        doc.setFontSize(14); doc.setTextColor(217, 119, 6); 
-        doc.text("1. RESUMEN DE GASTOS POR SEDE", 14, 50);
+        if (!monto || !concepto) return showNotification("Faltan datos de gasto", "error");
+
+        const btn = document.getElementById('btn-gasto');
+        btn.disabled = true;
+        btn.innerText = "Guardando...";
+
+        const hora = new Date().toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' });
+        const data = { monto, moneda, tipo, concepto, sede, hora, timestamp: Date.now(), user: currentUser.email };
+
+        try {
+            await addDoc(collection(db, "gastos"), data);
+            montoI.value = ''; conceptoI.value = '';
+            showNotification("Gasto guardado en la nube", "success");
+        } catch (error) {
+            console.error(error);
+            showNotification("Error al guardar gasto", "error");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Registrar Gasto";
+        }
+    };
+
+    // --- INTERFAZ ---
+    window.actualizarUI = () => {
+        // Filtros Ingresos
+        const fSedeBs = document.getElementById('filtro-sede-bs').value;
+        const fRef = document.getElementById('buscador-bs').value.toLowerCase();
+        const filtradosBs = localDB.bs.filter(i => (fSedeBs === "Todas" || i.sede === fSedeBs) && i.ref.toLowerCase().includes(fRef));
+        
+        document.getElementById('lista-bs').innerHTML = filtradosBs.map(i => `
+            <div class="item item-bs">
+                <div class="item-header">
+                    <span class="item-sede">${i.sede}</span>
+                    <span class="item-monto monto-bs">${fmtBs(i.monto)}</span>
+                </div>
+                <div class="item-details">Ref: <b>${i.ref}</b></div>
+                <div class="item-meta">
+                    <span class="time-label">🕒 ${i.hora}</span>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn-action btn-edit" onclick="gestionarBs('${i.fbId}', '${i.ref}', ${i.monto}, '${i.sede}')">✏️</button>
+                        <button class="btn-action btn-delete" onclick="eliminarDoc('ingresosBs', '${i.fbId}')">🗑️</button>
+                    </div>
+                </div>
+            </div>`).join('');
+
+        // Filtros Gastos
+        const fSedeG = document.getElementById('filtro-sede-g').value;
+        const filtradosG = localDB.gastos.filter(i => (fSedeG === "Todas" || i.sede === fSedeG));
+
+        document.getElementById('lista-gastos').innerHTML = filtradosG.map(i => `
+            <div class="item item-gasto">
+                <div class="item-header">
+                    <span class="item-sede">${i.sede}</span>
+                    <span class="item-monto monto-gasto">${i.moneda === 'USD' ? fmtUsd(i.monto) : fmtBs(i.monto)}</span>
+                </div>
+                <div class="item-details" style="color:var(--primary-dark); font-weight:600;">${i.tipo}</div>
+                <div class="item-details"><i>"${i.concepto}"</i></div>
+                <div class="item-meta">
+                    <span class="time-label">🕒 ${i.hora}</span>
+                    <button class="btn-action btn-delete" onclick="eliminarDoc('gastos', '${i.fbId}')">🗑️</button>
+                </div>
+            </div>`).join('');
+
+        // Totales Resumen
+        let tIngresosBs = 0, tGastosBs = 0, tGastosUsd = 0;
+        const resDiv = document.getElementById('resumen-final'); 
+        resDiv.innerHTML = '';
+        
+        sedes.forEach(s => {
+            const ingBsSede = localDB.bs.filter(x => x.sede === s).reduce((a,b) => a+b.monto, 0);
+            const gasBsSede = localDB.gastos.filter(x => x.sede === s && x.moneda === 'BS').reduce((a,b) => a+b.monto, 0);
+            const gasUsdSede = localDB.gastos.filter(x => x.sede === s && x.moneda === 'USD').reduce((a,b) => a+b.monto, 0);
+            
+            tIngresosBs += ingBsSede; tGastosBs += gasBsSede; tGastosUsd += gasUsdSede;
+            
+            if(ingBsSede > 0 || gasBsSede > 0 || gasUsdSede > 0) {
+                resDiv.innerHTML += `
+                    <div class="resumen-sede-card">
+                        <div class="resumen-sede-info">
+                            <div class="resumen-sede-nombre">${s}</div>
+                            <div class="resumen-sede-cifras">
+                                <span style="color:var(--success)">Ingresos: ${fmtBs(ingBsSede)}</span><br>
+                                <span style="color:var(--warning)">Gastos: ${fmtBs(gasBsSede)} | ${fmtUsd(gasUsdSede)}</span>
+                            </div>
+                        </div>
+                        <div class="badge-cantidad">${localDB.bs.filter(x => x.sede === s).length}</div>
+                    </div>`;
+            }
+        });
+
+        document.getElementById('tot-ingresos').innerText = fmtBs(tIngresosBs);
+        document.getElementById('tot-gastos-bs').innerText = fmtBs(tGastosBs);
+        document.getElementById('tot-gastos-usd').innerText = fmtUsd(tGastosUsd);
+    };
+
+    // --- ACCIONES SECUNDARIAS ---
+    window.gestionarBs = (fbId, ref, monto, sede) => {
+        if (confirm(`¿Deseas EDITAR la Referencia: ${ref}?`)) {
+            document.getElementById('bs-monto').value = monto.toLocaleString('es-VE', { minimumFractionDigits: 2 });
+            document.getElementById('bs-ref').value = ref;
+            document.getElementById('bs-sede').value = sede;
+            editandoBsID = fbId;
+            document.getElementById('btn-bs').innerText = "ACTUALIZAR REGISTRO";
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    };
+
+    window.eliminarDoc = async (coleccion, id) => {
+        if (confirm("⚠️ ¿Eliminar este registro de la nube?")) {
+            try {
+                await deleteDoc(doc(db, coleccion, id));
+                showNotification("Registro eliminado", "success");
+            } catch (error) {
+                console.error(error);
+                showNotification("Error al eliminar", "error");
+            }
+        }
+    };
+
+    window.reiniciarDia = () => {
+        if (confirm("⚠️ OJO: Esto solo limpia las variables en pantalla (NO borra la base de datos de Firebase). Ideal si quieres ver la pantalla en blanco. ¿Continuar?")) {
+            localDB = { bs: [], gastos: [] };
+            actualizarUI();
+            showNotification("Pantalla limpiada", "success");
+        }
+    };
+
+    window.abrirBanco = () => {
+        window.open('https://www.banesconline.com/Mantis/WebSite/login.aspx', 'banesco', 'width=1200,height=800');
+    };
+
+    // --- EXPORTAR PDF ---
+    window.exportarPDF = () => {
+        if (typeof window.jspdf === 'undefined') {
+            showNotification('Error: jsPDF no cargó', "error"); return;
+        }
+        
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.setFontSize(18); doc.setTextColor(30, 41, 59);
+        doc.text("REPORTE CONSOLIDADO - VPM CAJA PRO", 14, 20);
+        
+        doc.setFontSize(10); doc.setTextColor(100);
+        doc.text(`Generado: ${new Date().toLocaleString('es-VE')} por ${currentUser?.email || 'Usuario'}`, 14, 28);
+
+        doc.setFontSize(14); doc.setTextColor(16, 185, 129);
+        doc.text("1. RESUMEN INGRESOS BANESCO POR SEDE", 14, 40);
+        
+        const resumenCuerpo = sedes.map(s => {
+            const rS = localDB.bs.filter(x => x.sede === s).reduce((a,b) => a+b.monto, 0);
+            return [s, fmtBs(rS), localDB.bs.filter(x => x.sede === s).length];
+        });
+
+        doc.autoTable({
+            startY: 45, head: [['Sede', 'Total Ingresos (Bs)', 'Cant. Transacciones']],
+            body: resumenCuerpo, theme: 'striped',
+            headStyles: { fillColor: [16, 185, 129] }, styles: { fontSize: 9 }
+        });
+
+        let currentY = doc.lastAutoTable.finalY + 15;
+        doc.setFontSize(14); doc.setTextColor(245, 158, 11);
+        doc.text("2. RESUMEN DE GASTOS POR SEDE", 14, currentY);
 
         const resumenGastosCuerpo = sedes.map(s => {
-            const gBs = localDB.gastos.filter(x => x.sede === s && x.moneda === 'Bs').reduce((a,b) => a + b.monto, 0);
+            const gBs = localDB.gastos.filter(x => x.sede === s && x.moneda === 'BS').reduce((a,b) => a + b.monto, 0);
             const gUsd = localDB.gastos.filter(x => x.sede === s && x.moneda === 'USD').reduce((a,b) => a + b.monto, 0);
             return [s, fmtBs(gBs), fmtUsd(gUsd)];
         });
 
         doc.autoTable({ 
-            startY: 55, 
+            startY: currentY + 5, 
             head: [['Sede / Local', 'Total Gastos (Bs)', 'Total Gastos ($)']], 
-            body: resumenGastosCuerpo, 
-            theme: 'striped', 
-            headStyles: { fillColor: [217, 119, 6], fontStyle: 'bold' },
-            styles: { font: 'helvetica', fontSize: 9, cellPadding: 4 },
-            columnStyles: { 0: { fontStyle: 'bold' } } 
+            body: resumenGastosCuerpo, theme: 'striped', 
+            headStyles: { fillColor: [217, 119, 6] }, styles: { fontSize: 9 }
         });
 
-        let finalY = doc.lastAutoTable.finalY + 15;
-        doc.setFontSize(14); doc.setTextColor(217, 119, 6); 
-        doc.text("2. DETALLE DE OPERACIONES", 14, finalY);
+        currentY = doc.lastAutoTable.finalY + 15;
+        if (currentY > 250) { doc.addPage(); currentY = 20; }
+        
+        doc.setFontSize(14); doc.setTextColor(30, 41, 59); 
+        doc.text("3. DETALLE DE GASTOS", 14, currentY);
         
         const gastosCuerpo = localDB.gastos.map(x => {
             const formatMonto = x.moneda === 'USD' ? fmtUsd(x.monto) : fmtBs(x.monto);
@@ -897,16 +856,13 @@
         });
 
         doc.autoTable({ 
-            startY: finalY + 8, 
-            head: [['Sede / Local', 'Hora', 'Tipo', 'Concepto', 'Monto']], 
-            body: gastosCuerpo, 
-            theme: 'grid', 
-            headStyles: { fillColor: [217, 119, 6] }, 
-            styles: { font: 'helvetica', fontSize: 8 }, 
-            columnStyles: { 4: { halign: 'right', fontStyle: 'bold' } } 
+            startY: currentY + 5,
+            head: [['Sede', 'Hora', 'Categoría', 'Concepto', 'Monto']],
+            body: gastosCuerpo, theme: 'grid',
+            headStyles: { fillColor: [71, 85, 105] }, styles: { fontSize: 8 }
         });
 
-        showLoader(false); window.open(doc.output('bloburl'), '_blank');
+        window.open(doc.output('bloburl'), '_blank');
     };
 </script>
 </body>
