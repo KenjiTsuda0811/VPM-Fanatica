@@ -25,85 +25,52 @@
             padding: 15px; overflow: hidden; height: 100vh; box-sizing: border-box; color: var(--text-main);
         }
         
-        /* --- ESTILOS MEJORADOS PAGINA DE INICIO (LOGIN PREMIUM) --- */
+        /* --- ESTILOS OPTIMIZADOS PARA WINDOWS SERVER (LOGIN) --- */
         #login-screen { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            background-color: var(--primary-dark);
+            background-color: var(--primary-dark); /* Color sólido, sin gradientes animados para evitar lag en RDP */
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            z-index: 10000; padding: 20px; box-sizing: border-box; overflow: hidden;
+            z-index: 10000; padding: 20px; box-sizing: border-box;
         }
 
-        /* Esferas de luz animadas de fondo (Efecto Aurora/Mesh) */
-        .bg-shape {
-            position: absolute; filter: blur(80px); opacity: 0.5; border-radius: 50%; z-index: 1;
-            animation: float 12s infinite alternate ease-in-out;
-        }
-        .shape1 { background: var(--info); width: 40vw; height: 40vw; top: -10%; left: -10%; animation-delay: 0s; }
-        .shape2 { background: var(--accent); width: 50vw; height: 50vw; bottom: -20%; right: -10%; animation-delay: -5s; }
-        .shape3 { background: #2563eb; width: 30vw; height: 30vw; bottom: 20%; left: 20%; animation-delay: -2s; opacity: 0.3;}
-
-        @keyframes float {
-            0% { transform: translateY(0) scale(1); }
-            100% { transform: translateY(-30px) scale(1.1); }
-        }
-
-        /* Tarjeta de cristal ultra-pulida */
         .login-box { 
-            background: rgba(255, 255, 255, 0.92); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
-            padding: 45px 35px; border-radius: 24px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6); 
-            width: 100%; max-width: 400px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.5);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 10;
+            background: #ffffff; /* Fondo sólido, sin blur (desenfoque) para rendimiento óptimo */
+            padding: 40px 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+            width: 100%; max-width: 400px; text-align: center; border: 1px solid #e2e8f0;
         }
-        .login-box:hover { transform: translateY(-5px); }
         
-        .login-logo { font-size: 52px; margin-bottom: 5px; display: inline-block; animation: pulseIcon 3s infinite; text-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .login-logo { font-size: 48px; margin-bottom: 5px; display: inline-block; } /* Animación eliminada */
 
-        @keyframes pulseIcon {
-            0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); }
-        }
+        .login-box h1 { color: var(--primary-dark); margin: 0 0 5px 0; font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+        .login-box p.subtitle { color: var(--text-muted); font-size: 14px; font-weight: 500; margin-bottom: 30px; line-height: 1.4; }
 
-        .login-box h1 { color: var(--primary-dark); margin: 0 0 5px 0; font-size: 34px; font-weight: 800; letter-spacing: -1.5px; }
-        .login-box p.subtitle { color: var(--text-muted); font-size: 14px; font-weight: 500; margin-bottom: 35px; line-height: 1.5; }
-
-        .input-group { position: relative; margin-bottom: 20px; }
+        .input-group { position: relative; margin-bottom: 20px; display: flex; align-items: center; }
 
         .login-box input { 
-            width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 14px; 
+            width: 100%; padding: 15px !important; border: 2px solid #e2e8f0; border-radius: 8px; 
             box-sizing: border-box; font-size: 15px; font-family: var(--body-font); font-weight: 500;
-            background-color: #f8fafc; color: var(--primary-dark); transition: all 0.3s ease; -webkit-appearance: none;
+            background-color: #f8fafc; color: var(--primary-dark); transition: border-color 0.2s ease; -webkit-appearance: none;
         }
 
-        .login-box input:focus { 
-            outline: none; border-color: var(--info); background-color: white;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); 
-        }
+        .login-box input:focus { outline: none; border-color: var(--info); background-color: #ffffff; }
 
-        /* Botón de login con gradiente y efecto brillo */
         .login-box button { 
-            width: 100%; padding: 16px; 
-            background: linear-gradient(135deg, var(--info), #2563eb, var(--accent)); 
-            background-size: 200% auto;
-            color: white; border: none; border-radius: 14px; font-weight: 700; font-size: 16px; 
-            text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.5s; 
-            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4); margin-top: 10px;
+            width: 100%; padding: 16px; background-color: var(--info); 
+            color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 16px; 
+            text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: background-color 0.2s ease; 
+            margin-top: 10px;
         }
-        .login-box button:hover { background-position: right center; transform: translateY(-2px); box-shadow: 0 15px 25px -5px rgba(59, 130, 246, 0.5); }
+        .login-box button:hover { background-color: #2563eb; }
 
         #login-error { 
             background-color: #fef2f2; color: var(--danger); font-size: 13px; font-weight: 600;
-            margin-bottom: 20px; padding: 12px; border-radius: 10px; border: 1px solid #fecaca;
-            display: none; text-align: left; animation: shake 0.5s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); }
+            margin-bottom: 20px; padding: 12px; border-radius: 8px; border: 1px solid #fecaca;
+            display: none; text-align: left;
         }
 
         .login-footer { 
-            margin-top: 35px; color: rgba(255,255,255,0.6); font-size: 12px; text-align: center; 
-            line-height: 1.8; font-weight: 500; background: rgba(0,0,0,0.3); padding: 12px 30px; border-radius: 50px;
-            backdrop-filter: blur(10px); z-index: 10; border: 1px solid rgba(255,255,255,0.1);
+            margin-top: 30px; color: rgba(255,255,255,0.6); font-size: 13px; text-align: center; 
+            line-height: 1.8; font-weight: 500; padding: 12px 25px;
         }
         .login-footer strong { color: white; font-weight: 700; }
 
@@ -112,12 +79,13 @@
         .user-info { font-weight: 700; color: var(--primary-dark); font-size: 14px; display: flex; align-items: center; gap: 12px; }
         .role-badge { background: var(--warning); color: white; padding: 4px 10px; border-radius: 50px; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;}
         .role-badge.admin { background: var(--danger); }
-        .btn-logout { background: #f1f5f9; color: var(--text-main); border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: all 0.2s; }
+        .btn-logout { background: #f1f5f9; color: var(--text-main); border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: background-color 0.2s; }
+        .btn-logout:hover { background: #e2e8f0; }
 
         /* APP LAYOUT */
         #app-layout { display: none; height: calc(100vh - 95px); }
         .main-layout { display: grid; grid-template-columns: 1fr 1fr 420px; gap: 20px; height: 100%; max-width: 1900px; margin: 0 auto; }
-        .panel { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #e2e8f0; position: relative;}
+        .panel { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #e2e8f0; position: relative;}
         
         .panel::before { content:''; position: absolute; top:0; left:25px; right:25px; height: 4px; border-radius: 0 0 4px 4px; }
         .panel-ingresos::before { background-color: var(--success); }
@@ -128,29 +96,29 @@
         label { font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
         
         input:not([type="checkbox"]), select:not([multiple]) { 
-            width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; font-size: 14px; margin-bottom: 12px; font-family: var(--body-font); color: var(--primary-dark); background-color: #f8fafc; -webkit-appearance: none;
+            width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 14px; margin-bottom: 12px; font-family: var(--body-font); color: var(--primary-dark); background-color: #f8fafc; -webkit-appearance: none;
         }
         select { -webkit-appearance: auto; }
         
         .btn-pegar-unico { width: 100%; padding: 10px 15px; background: white; color: var(--warning); border: 2px solid var(--warning); border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; text-transform: uppercase; margin-bottom: 8px; font-family: var(--body-font);}
         
-        .btn { width: 100%; padding: 14px; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 14px; text-transform: uppercase; font-family: var(--body-font); letter-spacing: 0.5px; }
+        .btn { width: 100%; padding: 14px; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; text-transform: uppercase; font-family: var(--body-font); letter-spacing: 0.5px; }
         .btn-ingreso { background-color: var(--success); }
         .btn-cuadre { background-color: var(--accent); }
         .btn-pdf { background-color: var(--danger); margin-top: 10px; }
-        .btn-banco { background: linear-gradient(135deg, #1e40af, #3b82f6); margin-top: 15px; border-radius: 50px;}
+        .btn-banco { background-color: #1e40af; margin-top: 15px; }
         .btn-reset { background-color: transparent; color: var(--text-muted); margin-top: 10px; font-size: 11px; padding: 8px; border: 1px solid #e2e8f0; }
 
-        .filtros-box { background: #f8fafc; padding: 12px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; }
+        .filtros-box { background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e2e8f0; }
         .filtros-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .filtros-grid input, .filtros-grid select { margin-bottom: 0; font-size: 12px; padding: 10px; }
 
         .scroll-area { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
-        .scroll-area::-webkit-scrollbar { width: 5px; }
+        .scroll-area::-webkit-scrollbar { width: 6px; }
         .scroll-area::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
         .scroll-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-        .item { background: #fff; border: 1px solid #e2e8f0; padding: 12px; margin-bottom: 10px; border-radius: 12px; position: relative; font-size: 14px; }
+        .item { background: #fff; border: 1px solid #e2e8f0; padding: 12px; margin-bottom: 10px; border-radius: 8px; position: relative; font-size: 14px; }
         .item-bs { border-left: 4px solid var(--success); }
         .item-cuadre { border-left: 4px solid var(--accent); }
         
@@ -164,45 +132,45 @@
         .btn-del { background: #fee2e2; color: var(--danger); border: none; border-radius: 6px; padding: 5px 9px; cursor: pointer; font-size: 14px; }
         .time-label { font-size: 11px; color: var(--text-muted); font-weight: 600; background: #f1f5f9; padding: 3px 7px; border-radius: 4px; }
 
-        .total-box { padding: 12px; border-radius: 12px; text-align: center; color: white; margin-bottom: 10px; }
+        .total-box { padding: 12px; border-radius: 8px; text-align: center; color: white; margin-bottom: 10px; }
         .total-box small { text-transform: uppercase; font-size: 10px; font-weight: 700; opacity: 0.9; display: block; margin-bottom: 5px;}
         .total-amount { font-size: 1.4rem; font-weight: 900; }
 
-        .bg-reg { background: linear-gradient(135deg, #059669, var(--success)); }
-        .bg-pto { background: linear-gradient(135deg, #2563eb, var(--info)); }
-        .bg-usd { background: linear-gradient(135deg, #7c3aed, var(--accent)); }
+        .bg-reg { background-color: var(--success); }
+        .bg-pto { background-color: var(--info); }
+        .bg-usd { background-color: var(--accent); }
         
-        .mask-text { font-size: 12px !important; font-weight: 700; background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 50px; display: inline-block; color: white; }
+        .mask-text { font-size: 12px !important; font-weight: 700; background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 8px; display: inline-block; color: white; }
         
-        .resumen-sede-card { background: white; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .badge-cantidad { background: #f1f5f9; color: var(--primary); width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; border: 1px solid #e2e8f0; }
+        .resumen-sede-card { background: white; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .badge-cantidad { background: #f1f5f9; color: var(--primary); width: 35px; height: 35px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; border: 1px solid #e2e8f0; }
         
         .locked-sede { position: relative; overflow: hidden; border-color: #cbd5e1; }
         .locked-sede .card-content { filter: blur(4px); opacity: 0.5; user-select: none; pointer-events: none; }
-        .locked-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.4); z-index: 2; }
+        .locked-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.5); z-index: 2; }
         .locked-overlay span:first-child { font-size: 24px; }
-        .locked-overlay span:last-child { font-size: 11px; font-weight: 800; color: var(--primary-dark); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; background: white; padding: 2px 8px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .locked-overlay span:last-child { font-size: 11px; font-weight: 800; color: var(--primary-dark); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; background: white; padding: 2px 8px; border-radius: 6px; border: 1px solid #cbd5e1; }
 
-        .alert-critica { background: #fef2f2; color: var(--danger); padding: 12px; border-radius: 10px; font-size: 12px; font-weight: 700; display: none; margin-bottom: 15px; border: 2px solid #fecaca; text-align: center; }
-        .pegado-exito { background-color: #ecfdf5 !important; border-color: var(--success) !important; transition: 0.5s; }
+        .alert-critica { background: #fef2f2; color: var(--danger); padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 700; display: none; margin-bottom: 15px; border: 1px solid #fecaca; text-align: center; }
+        .pegado-exito { background-color: #ecfdf5 !important; border-color: var(--success) !important; transition: background-color 0.3s; }
 
         .disabled-panel { opacity: 0.6; pointer-events: none; filter: grayscale(0.5); }
         .hidden { display: none !important; }
         
-        #loader { position: fixed; bottom: 20px; right: 20px; background: rgba(15, 23, 42, 0.9); color: white; padding: 10px 20px; border-radius: 50px; font-size: 12px; font-weight: 700; z-index: 9999; display: none; }
+        #loader { position: fixed; bottom: 20px; right: 20px; background: var(--primary-dark); color: white; padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 9999; display: none; }
 
         /* --- ESTILOS DE MODALES (ADMIN) --- */
         .modal-overlay {
             position: fixed; top:0; left:0; width:100vw; height:100vh;
-            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px);
+            background: rgba(15, 23, 42, 0.8);
             display: none; justify-content: center; align-items: center; z-index: 100000;
         }
         .modal-box {
-            background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3); position: relative; box-sizing: border-box; margin: 15px;
+            background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 400px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4); position: relative; box-sizing: border-box; margin: 15px; border: 1px solid #e2e8f0;
         }
         .modal-close {
-            position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted); transition: 0.2s;
+            position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);
         }
         .modal-close:hover { color: var(--danger); }
 
@@ -228,7 +196,7 @@
         <h2 style="margin-top:0">🏢 Crear Nueva Sede</h2>
         <label>Nombre del Local / Sede</label>
         <input type="text" id="nueva-sede-nombre" placeholder="Ej: Sucursal Centro">
-        <button class="btn" style="background:var(--info);" onclick="guardarSede()">Guardar Sede</button>
+        <button class="btn" style="background-color:var(--info);" onclick="guardarSede()">Guardar Sede</button>
     </div>
 
     <div id="modal-usuario" class="modal-box hidden">
@@ -248,19 +216,15 @@
             <select id="nuevo-usu-sede">
                 </select>
         </div>
-        <button class="btn" style="background:var(--accent);" onclick="guardarUsuario()">Crear Usuario</button>
+        <button class="btn" style="background-color:var(--accent);" onclick="guardarUsuario()">Crear Usuario</button>
     </div>
 </div>
 
 <div id="login-screen">
-    <div class="bg-shape shape1"></div>
-    <div class="bg-shape shape2"></div>
-    <div class="bg-shape shape3"></div>
-
     <div class="login-box">
         <div class="login-logo">📊</div>
         <h1>VPM</h1>
-        <p class="subtitle">Control de Caja Profesional<br>Por favor, identifíquese para continuar</p>
+        <p class="subtitle">Control de Caja Profesional</p>
         
         <div id="login-error"></div>
         
@@ -276,13 +240,13 @@
     </div>
     
     <div class="login-footer">
-        Creado por <strong>Jose R.</strong> &nbsp;|&nbsp; Lanzado por <strong>Samuel A.</strong>
+        Creador por <strong>Jose R.</strong> &nbsp;|&nbsp; Lanzado por <strong>Samuel A.</strong>
     </div>
 </div>
 
 <div id="top-bar" class="top-nav hidden">
     <div class="user-info">
-        <div style="background:#f1f5f9; width:35px; height:35px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid #e2e8f0;">👤</div>
+        <div style="background:#f1f5f9; width:35px; height:35px; border-radius:8px; display:flex; align-items:center; justify-content:center; border:1px solid #e2e8f0;">👤</div>
         <div>
             <span id="user-display">Usuario</span><br>
             <span id="role-display" class="role-badge">Local</span>
@@ -325,7 +289,7 @@
 
         <div class="panel panel-cuadre" id="panel-cuadre">
             <h2>Cierres Punto / USD</h2>
-            <div id="form-cuadre" style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+            <div id="form-cuadre" style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
                 <label>Tipo de Cierre</label>
                 <select id="c-tipo">
                     <option value="Punto">Cierre de Punto (Bs)</option>
@@ -350,8 +314,8 @@
             <div class="scroll-area" id="resumen-final" style="margin-top: 10px;"></div>
             
             <div style="margin-top:auto;">
-                <button id="btn-crear-sede" class="btn hidden" style="background:#059669; margin-top:10px;" onclick="abrirModalSedes()">🏢 Crear Nueva Sede</button>
-                <button id="btn-crear-usuario" class="btn hidden" style="background:#4f46e5; margin-top:10px;" onclick="abrirModalUsuarios()">👥 Crear Nuevo Usuario</button>
+                <button id="btn-crear-sede" class="btn hidden" style="background-color:#059669; margin-top:10px;" onclick="abrirModalSedes()">🏢 Crear Nueva Sede</button>
+                <button id="btn-crear-usuario" class="btn hidden" style="background-color:#4f46e5; margin-top:10px;" onclick="abrirModalUsuarios()">👥 Crear Nuevo Usuario</button>
 
                 <button class="btn btn-banco" onclick="abrirBanco()">🏦 Abrir Portal Banesco</button>
                 <button id="btn-pdf" class="btn btn-pdf hidden" onclick="exportarPDF()">📥 Descargar Reporte PDF</button>
@@ -394,13 +358,13 @@
         'jose@gmail.com': { role: 'admin', sede: 'Todas' }
     };
 
-    // SEDES PRE-CREADAS (Constante inamovible para garantizar que siempre salgan)
+    // SEDES PRE-CREADAS
     const SEDES_DEFAULT = ["Belleza Principal", "Beauty Principal", "Gran Bazar", "Libertador"];
 
     let currentUserProfile = null;
     let localDB = { bs: [], cuadre: [] };
     let editandoBsID = null;
-    let sedes = [...SEDES_DEFAULT]; // Inicializamos con las 4 por defecto
+    let sedes = [...SEDES_DEFAULT]; 
     
     const fmtBs = (n) => "Bs. " + n.toLocaleString('es-VE', { minimumFractionDigits: 2 });
     const fmtUsd = (n) => "$ " + n.toLocaleString('en-US', { minimumFractionDigits: 2 });
@@ -455,21 +419,22 @@
             
             document.getElementById('email').value = ''; document.getElementById('password').value = '';
 
-            // LÓGICA DE MOSTRAR/OCULTAR BOTONES SEGÚN ROL
+            // LÓGICA DE ROLES ESTRICTA
             if (currentUserProfile.role === 'admin') {
                 badge.innerText = 'Administrador'; badge.classList.add('admin');
                 document.getElementById('btn-pdf').classList.remove('hidden');
                 document.getElementById('btn-reset').classList.remove('hidden');
+                // Mostrar botones de creación a administradores
                 document.getElementById('btn-crear-sede').classList.remove('hidden');
                 document.getElementById('btn-crear-usuario').classList.remove('hidden');
+                
                 document.getElementById('form-cuadre').classList.remove('disabled-panel');
                 document.getElementById('bs-sede').disabled = false;
                 document.getElementById('c-sede').disabled = false;
                 document.getElementById('filtro-sede').disabled = false;
             } else {
                 badge.innerText = currentUserProfile.sede; badge.classList.remove('admin');
-                
-                // OCULTA EXPRESAMENTE LOS BOTONES A USUARIOS NORMALES
+                // Ocultar forzosamente los botones de creación a usuarios normales
                 document.getElementById('btn-pdf').classList.add('hidden');
                 document.getElementById('btn-reset').classList.add('hidden');
                 document.getElementById('btn-crear-sede').classList.add('hidden');
@@ -493,13 +458,11 @@
         const cuadreRef = ref(db, 'vpm/cuadre');
         const sedesRef = ref(db, 'vpm/sedes_list');
 
-        // LECTURA DE SEDES: Combina las 4 por defecto con las nuevas de la base de datos
         onValue(sedesRef, (snapshot) => {
             let dbSedes = [];
             if(snapshot.exists()) {
                 snapshot.forEach(child => dbSedes.push(child.val()));
             }
-            // Uso de Set para evitar que se dupliquen si ya estaban en la BD
             sedes = [...new Set([...SEDES_DEFAULT, ...dbSedes])];
             actualizarSelectsSedes();
             renderUI();
@@ -531,13 +494,16 @@
         }
     }
 
+    // MODALES - SOLO ACCESIBLES SI ERES ADMIN
     window.abrirModalSedes = () => {
+        if(currentUserProfile?.role !== 'admin') return;
         document.getElementById('modal-overlay').style.display = 'flex';
         document.getElementById('modal-sede').classList.remove('hidden');
         document.getElementById('modal-usuario').classList.add('hidden');
     };
 
     window.abrirModalUsuarios = () => {
+        if(currentUserProfile?.role !== 'admin') return;
         document.getElementById('modal-overlay').style.display = 'flex';
         document.getElementById('modal-usuario').classList.remove('hidden');
         document.getElementById('modal-sede').classList.add('hidden');
@@ -553,6 +519,7 @@
     };
 
     window.guardarSede = () => {
+        if(currentUserProfile?.role !== 'admin') return;
         const nombre = document.getElementById('nueva-sede-nombre').value.trim();
         if(!nombre) return alert("Ingrese un nombre para la sede.");
         if(sedes.includes(nombre)) return alert("Esta sede ya existe en el sistema.");
@@ -566,6 +533,7 @@
     };
 
     window.guardarUsuario = async () => {
+        if(currentUserProfile?.role !== 'admin') return;
         const email = document.getElementById('nuevo-usu-email').value.trim().toLowerCase();
         const password = document.getElementById('nuevo-usu-pass').value;
         const rol = document.getElementById('nuevo-usu-rol').value;
@@ -678,7 +646,6 @@
         let tReg = 0, tPto = 0, tUsd = 0;
         const resDiv = document.getElementById('resumen-final'); resDiv.innerHTML = '';
         
-        // Iteramos sobre el arreglo 'sedes' que ahora tiene aseguradas las 4 sedes originales
         sedes.forEach(s => {
             const trSede = localDB.bs.filter(x => x.sede === s);
             const rS = trSede.reduce((a,b) => a+b.monto, 0);
