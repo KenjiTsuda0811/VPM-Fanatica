@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPM - Verificación de Sistema</title>
+    <link rel="icon" href="https://fav.farm/📊" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- VARIABLES VPM --- */
+        :root {
+            --primary-dark: #0f172a;
+            --info: #3b82f6;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --body-font: 'Plus Jakarta Sans', sans-serif;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: var(--body-font);
+            background-color: var(--primary-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* --- CONTENEDOR TIPO LOGIN VPM --- */
+        .login-box {
+            background: #ffffff;
+            padding: 50px 40px;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            z-index: 10;
+            animation: containerAppear 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* --- EFECTO AL EMOJI 📊 --- */
+        .logo-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .login-logo {
+            font-size: 56px;
+            display: inline-block;
+            animation: floatEmoji 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 15px rgba(59, 130, 246, 0.3));
+            cursor: default;
+        }
+
+        /* Brillo pulsante detrás del emoji */
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            background: var(--info);
+            filter: blur(35px);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.4;
+            animation: pulseGlow 2s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            margin: 0 0 8px 0;
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 35px;
+            line-height: 1.5;
+        }
+
+        /* --- BARRA DE PROGRESO VPM --- */
+        .loader-track {
+            width: 100%;
+            height: 6px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 35px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .loader-bar {
+            width: 35%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--info), #60a5fa);
+            border-radius: 10px;
+            animation: slideLoading 1.5s infinite ease-in-out;
+        }
+
+        /* --- MENSAJE DE TELEGRAM ACTUALIZADO --- */
+        .telegram-card {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: left;
+            transition: transform 0.3s ease;
+        }
+
+        .telegram-card:hover {
+            transform: scale(1.02);
+        }
+
+        .tg-icon-circle {
+            background: #ffffff;
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 10px rgba(0, 136, 204, 0.15);
+            border: 1px solid #e0f2fe;
+        }
+
+        .tg-text {
+            color: #0369a1;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .tg-text b {
+            color: #0c4a6e;
+            font-weight: 800;
+            background: rgba(12, 74, 110, 0.05);
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        /* --- ANIMACIONES --- */
+        @keyframes floatEmoji {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(5deg); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.6; }
+        }
+
+        @keyframes slideLoading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(300%); }
+        }
+
+        @keyframes containerAppear {
+            from { opacity: 0; transform: scale(0.9) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 30px;
+            color: rgba(255,255,255,0.4);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .footer strong { color: rgba(255,255,255,0.8); }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <div class="logo-container">
+            <div class="login-logo">📊</div>
+        </div>
+        
+        <h1>VPM</h1>
+        <p class="subtitle">
+            Estamos verificando las ventas del día anterior. El acceso se restablecerá automáticamente al finalizar.
+        </p>
+
+        <div class="loader-track">
+            <div class="loader-bar"></div>
+        </div>
+
+        <div class="telegram-card">
+            <div class="tg-icon-circle">✈️</div>
+            <p class="tg-text">
+                Comunícate por <b>Telegram</b> para verificar cualquier <b>pago móvil</b> pendiente.
+            </p>
+        </div>
+    </div>
+
+    <div class="footer">
+        Sistema desarrollado por <strong>"José R."</strong> y <strong>"Samuel A."</strong>
+    </div>
+
+</body>
+</html>
