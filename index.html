@@ -25,7 +25,6 @@
             padding: 15px; overflow: hidden; height: 100vh; box-sizing: border-box; color: var(--text-main);
         }
         
-        /* --- ESTILOS OPTIMIZADOS PARA WINDOWS SERVER (LOGIN) --- */
         #login-screen { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             background-color: var(--primary-dark); 
@@ -363,6 +362,22 @@
 </div>
 
 <script type="module">
+    /* --- LÓGICA DE CIERRE AUTOMÁTICO (7:00 PM HORA VENEZUELA) --- */
+    function verificarCierre() {
+        const ahora = new Date();
+        const opciones = { timeZone: 'America/Caracas', hour12: false, hour: '2-digit', minute: '2-digit' };
+        const horaVenezuela = new Intl.DateTimeFormat('es-VE', opciones).format(ahora);
+        
+        // Bloquea a partir de las 19:00 (7:00 PM)
+        if (horaVenezuela >= "19:00") {
+            window.location.href = "stop.html";
+        }
+    }
+
+    verificarCierre(); // Revisión inmediata al cargar
+    setInterval(verificarCierre, 60000); // Revisión cada minuto
+
+    /* --- INICIO CÓDIGO FIREBASE --- */
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import { getDatabase, ref, push, set, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
@@ -573,7 +588,6 @@
         document.getElementById('div-nuevo-usu-sede').style.display = rol === 'admin' ? 'none' : 'block';
     };
 
-    /* --- CORRECCION AL CREAR SEDE --- */
     window.guardarSede = () => {
         if(currentUserProfile?.role !== 'admin') return;
         const nombre = document.getElementById('nueva-sede-nombre').value.trim();
@@ -581,7 +595,6 @@
         if(sedes.map(s=>s.toLowerCase()).includes(nombre.toLowerCase())) return alert("Esta sede ya existe en el sistema.");
         
         showLoader(true);
-        // Se envía como objeto con clave 'nombre' para que Firebase lo reconozca correctamente al iterarlo
         const nuevaSedeRef = push(ref(db, 'vpm/sedes_list'));
         set(nuevaSedeRef, { nombre: nombre }).then(() => {
             alert("Sede creada exitosamente.");
@@ -825,7 +838,6 @@
 
     window.abrirBanco = () => { window.open('https://www.banesconline.com/Mantis/WebSite/login.aspx', 'banesco', 'width=1200,height=800'); };
 
-    /* --- GENERACION PDF TRANSACCIONES --- */
     window.exportarPDF = () => {
         if (currentUserProfile.role !== 'admin') return;
         if (typeof window.jspdf === 'undefined') return alert('Error crítico: La librería PDF no está disponible.');
@@ -856,7 +868,6 @@
         showLoader(false); window.open(doc.output('bloburl'), '_blank');
     };
 
-    /* --- GENERACION PDF GASTOS (NUEVO) --- */
     window.exportarPDFGastos = () => {
         if (currentUserProfile.role !== 'admin') return;
         if (typeof window.jspdf === 'undefined') return alert('Error crítico: La librería PDF no está disponible.');
