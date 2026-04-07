@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VPM - Control de Caja Pro</title>
+    <title>VPM - Control de Caja</title>
     <link rel="icon" href="https://fav.farm/📊" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -362,19 +362,20 @@
 </div>
 
 <script type="module">
-    /* --- LÓGICA DE CIERRE AUTOMÁTICO (7:00 PM HORA VENEZUELA) --- */
+    /* --- LÓGICA DE CIERRE AUTOMÁTICO (HORA VENEZUELA UTC-4) --- */
     function verificarCierre() {
         const ahora = new Date();
         const opciones = { timeZone: 'America/Caracas', hour12: false, hour: '2-digit', minute: '2-digit' };
-        const horaVenezuela = new Intl.DateTimeFormat('es-VE', opciones).format(ahora);
+        const horaVE = new Intl.DateTimeFormat('es-VE', opciones).format(ahora);
         
-        // Bloquea a partir de las 19:00 (7:00 PM)
-        if (horaVenezuela >= "19:00") {
+        // Cierre: 7:00 PM (19:00) hasta Apertura: 9:30 AM (09:30)
+        // Bloqueamos si es >= 19:00 O si es < 09:30
+        if (horaVE >= "19:00" || horaVE < "09:30") {
             window.location.href = "stop.html";
         }
     }
 
-    verificarCierre(); // Revisión inmediata al cargar
+    verificarCierre(); 
     setInterval(verificarCierre, 60000); // Revisión cada minuto
 
     /* --- INICIO CÓDIGO FIREBASE --- */
