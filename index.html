@@ -17,6 +17,9 @@
             --text-muted: #64748b;
             --body-font: 'Plus Jakarta Sans', sans-serif;
             --glass-bg: rgba(255, 255, 255, 0.95);
+            --danger-soft: #fef2f2;
+            --danger-border: #fecaca;
+            --danger-text: #991b1b;
         }
 
         body, html {
@@ -47,7 +50,6 @@
             animation: containerAppear 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* --- EFECTO AL EMOJI 📊 --- */
         .logo-container {
             position: relative;
             display: inline-block;
@@ -62,7 +64,6 @@
             cursor: default;
         }
 
-        /* Brillo pulsante detrás del emoji */
         .logo-container::before {
             content: '';
             position: absolute;
@@ -91,7 +92,7 @@
             color: var(--text-muted);
             font-size: 15px;
             font-weight: 500;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
             line-height: 1.5;
         }
 
@@ -102,7 +103,7 @@
             background: #f1f5f9;
             border-radius: 10px;
             overflow: hidden;
-            margin-bottom: 35px;
+            margin-bottom: 20px;
             border: 1px solid #e2e8f0;
         }
 
@@ -114,11 +115,38 @@
             animation: slideLoading 1.5s infinite ease-in-out;
         }
 
-        /* --- MENSAJE DE TELEGRAM ACTUALIZADO --- */
+        /* --- LISTA DE LOCALES PENDIENTES --- */
+        .pending-list {
+            background-color: var(--danger-soft);
+            border: 1px solid var(--danger-border);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .pending-title {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #b91c1c;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .pending-locales {
+            color: var(--danger-text);
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* --- MENSAJE DE TELEGRAM --- */
         .telegram-card {
             background-color: #f0f9ff;
             border: 1px solid #bae6fd;
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -133,32 +161,29 @@
 
         .tg-icon-circle {
             background: #ffffff;
-            width: 48px;
-            height: 48px;
-            min-width: 48px;
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 18px;
             box-shadow: 0 4px 10px rgba(0, 136, 204, 0.15);
             border: 1px solid #e0f2fe;
         }
 
         .tg-text {
             color: #0369a1;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            line-height: 1.5;
+            line-height: 1.4;
             margin: 0;
         }
 
         .tg-text b {
             color: #0c4a6e;
             font-weight: 800;
-            background: rgba(12, 74, 110, 0.05);
-            padding: 2px 5px;
-            border-radius: 4px;
         }
 
         /* --- ANIMACIONES --- */
@@ -208,6 +233,11 @@
 
         <div class="loader-track">
             <div class="loader-bar"></div>
+        </div>
+
+        <div class="pending-list">
+            <span class="pending-title">Faltan por conciliar:</span>
+            <p class="pending-locales">Beauty, Bazar, Belleza y Libertador</p>
         </div>
 
         <div class="telegram-card">
