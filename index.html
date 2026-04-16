@@ -18,11 +18,38 @@
             --info: #3b82f6; --warning: #f59e0b; --danger: #ef4444; 
             --accent: #8b5cf6; --gastos: #d97706; --bg: #f1f5f9; --text-main: #1e293b;
             --text-muted: #64748b; --body-font: 'Plus Jakarta Sans', sans-serif;
+            
+            /* Variables Dinámicas para Temas */
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --border: #e2e8f0;
+            --input-bg: #f8fafc;
+            --overlay-bg: rgba(255, 255, 255, 0.5);
+            --danger-bg: #fef2f2;
+            --danger-border: #fecaca;
+            --success-bg: #ecfdf5;
+        }
+
+        /* --- MODO OSCURO --- */
+        body.dark-mode {
+            --primary: #e2e8f0; --primary-dark: #f8fafc;
+            --bg: #0f172a; --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --border: #334155;
+            --input-bg: #020617;
+            --overlay-bg: rgba(15, 23, 42, 0.7);
+            --danger-bg: rgba(239, 68, 68, 0.1);
+            --danger-border: rgba(239, 68, 68, 0.3);
+            --success-bg: rgba(16, 185, 129, 0.1);
         }
 
         body { 
             font-family: var(--body-font); background-color: var(--bg); margin: 0; 
             padding: 15px; overflow: hidden; height: 100vh; box-sizing: border-box; color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         #login-screen { 
@@ -33,9 +60,9 @@
         }
 
         .login-box { 
-            background: #ffffff; 
+            background: var(--surface); 
             padding: 40px 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
-            width: 100%; max-width: 400px; text-align: center; border: 1px solid #e2e8f0;
+            width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border);
         }
         
         .login-logo { font-size: 48px; margin-bottom: 5px; display: inline-block; }
@@ -46,12 +73,12 @@
         .input-group { position: relative; margin-bottom: 20px; display: flex; align-items: center; }
 
         .login-box input { 
-            width: 100%; padding: 15px !important; border: 2px solid #e2e8f0; border-radius: 8px; 
+            width: 100%; padding: 15px !important; border: 2px solid var(--border); border-radius: 8px; 
             box-sizing: border-box; font-size: 15px; font-family: var(--body-font); font-weight: 500;
-            background-color: #f8fafc; color: var(--primary-dark); transition: border-color 0.2s ease; -webkit-appearance: none;
+            background-color: var(--input-bg); color: var(--primary-dark); transition: border-color 0.2s ease; -webkit-appearance: none;
         }
 
-        .login-box input:focus { outline: none; border-color: var(--info); background-color: #ffffff; }
+        .login-box input:focus { outline: none; border-color: var(--info); background-color: var(--surface); }
 
         .login-box button { 
             width: 100%; padding: 16px; background-color: var(--info); 
@@ -62,8 +89,8 @@
         .login-box button:hover { background-color: #2563eb; }
 
         #login-error { 
-            background-color: #fef2f2; color: var(--danger); font-size: 13px; font-weight: 600;
-            margin-bottom: 20px; padding: 12px; border-radius: 8px; border: 1px solid #fecaca;
+            background-color: var(--danger-bg); color: var(--danger); font-size: 13px; font-weight: 600;
+            margin-bottom: 20px; padding: 12px; border-radius: 8px; border: 1px solid var(--danger-border);
             display: none; text-align: left;
         }
 
@@ -74,17 +101,37 @@
         .login-footer strong { color: white; font-weight: 700; }
 
         /* HEADER NAV */
-        .top-nav { display: flex; justify-content: space-between; align-items: center; background: white; padding: 12px 25px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; background: var(--surface); padding: 12px 25px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--border); }
         .user-info { font-weight: 700; color: var(--primary-dark); font-size: 14px; display: flex; align-items: center; gap: 12px; }
         .role-badge { background: var(--warning); color: white; padding: 4px 10px; border-radius: 50px; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;}
         .role-badge.admin { background: var(--danger); }
-        .btn-logout { background: #f1f5f9; color: var(--text-main); border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: background-color 0.2s; }
-        .btn-logout:hover { background: #e2e8f0; }
+        .btn-logout { background: var(--surface-hover); color: var(--text-main); border: 1px solid var(--border); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: background-color 0.2s; }
+        .btn-logout:hover { background: var(--border); }
+
+        /* HINT ANIMADO MODO OSCURO */
+        .hint-bounce {
+            background-color: var(--accent);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 800;
+            position: absolute;
+            right: 180px; /* Ajustado para apuntar exactamente al botón de la luna/sol */
+            white-space: nowrap;
+            animation: bounceX 1.5s infinite;
+            pointer-events: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        @keyframes bounceX {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-8px); }
+        }
 
         /* APP LAYOUT - 4 COLUMNAS */
         #app-layout { display: none; height: calc(100vh - 95px); }
         .main-layout { display: grid; grid-template-columns: 1fr 1fr 1fr 340px; gap: 15px; height: 100%; max-width: 100%; margin: 0 auto; }
-        .panel { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #e2e8f0; position: relative;}
+        .panel { background: var(--surface); padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border); position: relative;}
         
         .panel::before { content:''; position: absolute; top:0; left:25px; right:25px; height: 4px; border-radius: 0 0 4px 4px; }
         .panel-ingresos::before { background-color: var(--success); }
@@ -96,11 +143,11 @@
         label { font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
         
         input:not([type="checkbox"]), select:not([multiple]) { 
-            width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 13px; margin-bottom: 12px; font-family: var(--body-font); color: var(--primary-dark); background-color: #f8fafc; -webkit-appearance: none;
+            width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 13px; margin-bottom: 12px; font-family: var(--body-font); color: var(--text-main); background-color: var(--input-bg); -webkit-appearance: none;
         }
         select { -webkit-appearance: auto; }
         
-        .btn-pegar-unico { width: 100%; padding: 8px 15px; background: white; color: var(--warning); border: 2px solid var(--warning); border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; font-family: var(--body-font);}
+        .btn-pegar-unico { width: 100%; padding: 8px 15px; background: var(--surface); color: var(--warning); border: 2px solid var(--warning); border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; font-family: var(--body-font);}
         
         .btn { width: 100%; padding: 12px; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; text-transform: uppercase; font-family: var(--body-font); letter-spacing: 0.5px; }
         .btn-ingreso { background-color: var(--success); }
@@ -108,18 +155,18 @@
         .btn-gastos-guardar { background-color: var(--gastos); }
         .btn-pdf { background-color: var(--danger); margin-top: 10px; }
         .btn-banco { background-color: #1e40af; margin-top: 15px; }
-        .btn-reset { background-color: transparent; color: var(--text-muted); margin-top: 10px; font-size: 11px; padding: 8px; border: 1px solid #e2e8f0; }
+        .btn-reset { background-color: transparent; color: var(--text-muted); margin-top: 10px; font-size: 11px; padding: 8px; border: 1px solid var(--border); }
 
-        .filtros-box { background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e2e8f0; }
+        .filtros-box { background: var(--input-bg); padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border); }
         .filtros-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .filtros-grid input, .filtros-grid select { margin-bottom: 0; font-size: 12px; padding: 8px; }
 
         .scroll-area { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
         .scroll-area::-webkit-scrollbar { width: 6px; }
-        .scroll-area::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
-        .scroll-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .scroll-area::-webkit-scrollbar-track { background: var(--surface-hover); border-radius: 10px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
 
-        .item { background: #fff; border: 1px solid #e2e8f0; padding: 12px; margin-bottom: 10px; border-radius: 8px; position: relative; font-size: 13px; }
+        .item { background: var(--surface); border: 1px solid var(--border); padding: 12px; margin-bottom: 10px; border-radius: 8px; position: relative; font-size: 13px; }
         .item-bs { border-left: 4px solid var(--success); }
         .item-cuadre { border-left: 4px solid var(--accent); }
         .item-gastos { border-left: 4px solid var(--gastos); }
@@ -133,7 +180,7 @@
         .item-meta { position: absolute; right: 12px; bottom: 12px; display: flex; align-items: center; gap: 8px; }
         .btn-edit { background: #fef9c3; color: #a16207; border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 13px; }
         .btn-del { background: #fee2e2; color: var(--danger); border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 13px; }
-        .time-label { font-size: 10px; color: var(--text-muted); font-weight: 600; background: #f1f5f9; padding: 3px 6px; border-radius: 4px; }
+        .time-label { font-size: 10px; color: var(--text-muted); font-weight: 600; background: var(--surface-hover); padding: 3px 6px; border-radius: 4px; }
 
         .total-box { padding: 10px; border-radius: 8px; text-align: center; color: white; margin-bottom: 8px; }
         .total-box small { text-transform: uppercase; font-size: 9px; font-weight: 700; opacity: 0.9; display: block; margin-bottom: 4px;}
@@ -145,32 +192,32 @@
         
         .mask-text { font-size: 12px !important; font-weight: 700; background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 8px; display: inline-block; color: white; }
         
-        .resumen-sede-card { background: white; border: 1px solid #e2e8f0; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .badge-cantidad { background: #f1f5f9; color: var(--primary); width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; border: 1px solid #e2e8f0; }
+        .resumen-sede-card { background: var(--surface); border: 1px solid var(--border); padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .badge-cantidad { background: var(--surface-hover); color: var(--primary); width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; border: 1px solid var(--border); }
         
-        .locked-sede { position: relative; overflow: hidden; border-color: #cbd5e1; }
+        .locked-sede { position: relative; overflow: hidden; border-color: var(--border); }
         .locked-sede .card-content { filter: blur(4px); opacity: 0.5; user-select: none; pointer-events: none; }
-        .locked-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.5); z-index: 2; }
+        .locked-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--overlay-bg); z-index: 2; }
         .locked-overlay span:first-child { font-size: 20px; }
-        .locked-overlay span:last-child { font-size: 10px; font-weight: 800; color: var(--primary-dark); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; background: white; padding: 2px 8px; border-radius: 6px; border: 1px solid #cbd5e1; }
+        .locked-overlay span:last-child { font-size: 10px; font-weight: 800; color: var(--primary-dark); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; background: var(--surface); padding: 2px 8px; border-radius: 6px; border: 1px solid var(--border); }
 
-        .alert-critica { background: #fef2f2; color: var(--danger); padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 700; display: none; margin-bottom: 12px; border: 1px solid #fecaca; text-align: center; }
-        .pegado-exito { background-color: #ecfdf5 !important; border-color: var(--success) !important; transition: background-color 0.3s; }
+        .alert-critica { background: var(--danger-bg); color: var(--danger); padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 700; display: none; margin-bottom: 12px; border: 1px solid var(--danger-border); text-align: center; }
+        .pegado-exito { background-color: var(--success-bg) !important; border-color: var(--success) !important; transition: background-color 0.3s; }
 
         .disabled-panel { opacity: 0.6; pointer-events: none; filter: grayscale(0.5); }
         .hidden { display: none !important; }
         
-        #loader { position: fixed; bottom: 20px; right: 20px; background: var(--primary-dark); color: white; padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 9999; display: none; }
+        #loader { position: fixed; bottom: 20px; right: 20px; background: var(--primary-dark); color: var(--surface); padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 9999; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
 
-        /* --- ESTILOS DE MODALES (ADMIN) --- */
+        /* --- ESTILOS DE MODALES (ADMIN/NOTAS) --- */
         .modal-overlay {
             position: fixed; top:0; left:0; width:100vw; height:100vh;
             background: rgba(15, 23, 42, 0.8);
             display: none; justify-content: center; align-items: center; z-index: 100000;
         }
         .modal-box {
-            background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 400px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4); position: relative; box-sizing: border-box; margin: 15px; border: 1px solid #e2e8f0;
+            background: var(--surface); padding: 30px; border-radius: 12px; width: 100%; max-width: 400px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4); position: relative; box-sizing: border-box; margin: 15px; border: 1px solid var(--border);
         }
         .modal-close {
             position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);
@@ -178,7 +225,7 @@
         .modal-close:hover { color: var(--danger); }
 
         /* Estilos Auditoría Banco */
-        .audit-item { font-size: 10px; border-bottom: 1px solid #e2e8f0; padding: 5px 0; color: var(--text-muted); }
+        .audit-item { font-size: 10px; border-bottom: 1px solid var(--border); padding: 5px 0; color: var(--text-muted); }
         .audit-item b { color: var(--primary-dark); }
 
         @media (max-width: 1200px) {
@@ -190,8 +237,35 @@
             .top-nav { flex-direction: column; align-items: stretch; gap: 10px; }
             .btn-logout { width: 100%; }
             .filtros-grid { grid-template-columns: 1fr; }
+            .hint-bounce { right: 20px; top: 50px; } /* Ajuste responsive de flecha */
         }
     </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if(localStorage.getItem('vpm-theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                const btn = document.getElementById('theme-icon');
+                if(btn) btn.innerText = '☀️';
+            }
+            if(localStorage.getItem('vpm-theme-hint-seen')) {
+                const hint = document.getElementById('dark-mode-hint');
+                if(hint) hint.style.display = 'none';
+            }
+        });
+        
+        window.toggleDarkMode = () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('vpm-theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+            
+            // Ocultar hint flecha para siempre
+            const hint = document.getElementById('dark-mode-hint');
+            if(hint) hint.style.display = 'none';
+            localStorage.setItem('vpm-theme-hint-seen', 'true');
+        };
+    </script>
 </head>
 <body>
 
@@ -224,6 +298,22 @@
         </div>
         <button class="btn" style="background-color:var(--accent);" onclick="guardarUsuario()">Crear Usuario</button>
     </div>
+
+    <div id="modal-pdf-comentarios" class="modal-box hidden" style="max-width: 500px;">
+        <button class="modal-close" onclick="cerrarModales()">✖</button>
+        <h2 style="margin-top:0">📝 Notas para el Reporte</h2>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4;">Agregue notas o marque errores para cada sede. Estas se guardarán y el empleado de la sede verá el mensaje la próxima vez que entre hoy.</p>
+        <div id="lista-comentarios-sedes" style="max-height: 250px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
+            </div>
+        <button class="btn" style="background-color:var(--danger);" onclick="generarPDFConComentarios()">Guardar y Generar PDF</button>
+    </div>
+
+    <div id="modal-nota-local" class="modal-box hidden">
+        <h2 style="margin-top:0; color: var(--danger);">⚠️ Mensaje de Administración</h2>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Se han reportado observaciones para su sede en el cuadre más reciente:</p>
+        <p id="texto-nota-local" style="font-size: 14px; font-weight: 700; color: var(--danger); line-height: 1.5; padding: 15px; background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: 8px; text-align: left;"></p>
+        <button class="btn" style="background-color:var(--info); margin-top: 15px;" onclick="cerrarNotaLocal()">Entendido</button>
+    </div>
 </div>
 
 <div id="login-screen">
@@ -252,13 +342,19 @@
 
 <div id="top-bar" class="top-nav hidden">
     <div class="user-info">
-        <div style="background:#f1f5f9; width:35px; height:35px; border-radius:8px; display:flex; align-items:center; justify-content:center; border:1px solid #e2e8f0;">👤</div>
+        <div style="background:var(--surface-hover); width:35px; height:35px; border-radius:8px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border);">👤</div>
         <div>
             <span id="user-display">Usuario</span><br>
             <span id="role-display" class="role-badge">Local</span>
         </div>
     </div>
-    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión 👋</button>
+    <div style="display: flex; gap: 10px; position: relative; align-items: center;">
+        <div id="dark-mode-hint" class="hint-bounce">Activa aqui el modo oscuro ➡️</div>
+        <button id="btn-theme" class="btn-logout" style="padding: 8px 12px; font-size: 14px;" onclick="toggleDarkMode()" title="Cambiar Tema">
+            <span id="theme-icon">🌙</span>
+        </button>
+        <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión 👋</button>
+    </div>
 </div>
 
 <div id="app-layout">
@@ -280,7 +376,7 @@
             <select id="bs-sede"></select>
             <button id="btn-bs" class="btn btn-ingreso" onclick="registrarBs()">Guardar Registro Bs.</button>
             
-            <hr style="border:0; border-top:1px solid #e2e8f0; margin:15px 0;">
+            <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
             
             <div class="filtros-box">
                 <div class="filtros-grid">
@@ -293,7 +389,7 @@
 
         <div class="panel panel-cuadre" id="panel-cuadre">
             <h2>Cierres Punto / USD</h2>
-            <div id="form-cuadre" style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+            <div id="form-cuadre" style="background: var(--input-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
                 <label>Tipo de Cierre</label>
                 <select id="c-tipo">
                     <option value="Punto">Cierre de Punto (Bs)</option>
@@ -310,7 +406,7 @@
 
         <div class="panel panel-gastos">
             <h2>Gastos y Pagos</h2>
-            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+            <div style="background: var(--input-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
                 <label>Tipo de Operación</label>
                 <select id="g-tipo">
                     <option value="Gasto">Gasto</option>
@@ -350,21 +446,25 @@
             
             <div class="scroll-area" id="resumen-final" style="margin-top: 10px;"></div>
 
-            <div id="panel-audit-banco" class="hidden" style="margin-top:10px; border: 1px dashed #cbd5e1; padding: 10px; border-radius: 8px;">
-                <label style="font-size: 9px;">Registro Actividad Banco</label>
+            <div id="panel-audit-banco" class="hidden" style="margin-top:10px; border: 1px dashed var(--border); padding: 10px; border-radius: 8px;">
+                <label style="font-size: 9px; color: var(--text-muted);">Registro Actividad Banco</label>
                 <div id="lista-audit-banco" style="max-height: 80px; overflow-y: auto;"></div>
             </div>
             
             <div style="margin-top:auto;">
-                <button id="btn-crear-sede" class="btn hidden" style="background-color:#059669; margin-top:10px;" onclick="abrirModalSedes()">🏢 Crear Nueva Sede</button>
-                <button id="btn-crear-usuario" class="btn hidden" style="background-color:#4f46e5; margin-top:10px;" onclick="abrirModalUsuarios()">👥 Crear Nuevo Usuario</button>
-
                 <button class="btn btn-banco" onclick="abrirBanco()">🏦 Abrir Banco</button>
-                <button id="btn-pdf" class="btn btn-pdf hidden" onclick="exportarPDF()">📥 Descargar Reporte Pago movil</button>
                 
-                <button id="btn-pdf-gastos" class="btn hidden" style="background-color:var(--gastos); margin-top:10px;" onclick="exportarPDFGastos()">📄 Descargar Reporte Gastos</button>
-
-                <button id="btn-reset" class="btn btn-reset hidden" onclick="reiniciarDia()">🗑️ Reiniciar Día (Borrar Todo)</button>
+                <div id="admin-action-buttons" class="hidden" style="margin-top: 15px; background: var(--input-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+                    <label style="font-size: 10px; text-align: center; display: block; margin-bottom: 10px; color: var(--primary-dark);">🛠️ PANEL DE ADMINISTRADOR</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <button id="btn-crear-sede" class="btn" style="background-color:#059669; font-size: 10px; padding: 10px; margin-top:0;" onclick="abrirModalSedes()">🏢 Crear Sede</button>
+                        <button id="btn-crear-usuario" class="btn" style="background-color:#4f46e5; font-size: 10px; padding: 10px; margin-top:0;" onclick="abrirModalUsuarios()">👥 Crear Usuario</button>
+                        <button id="btn-pdf" class="btn" style="background-color:var(--danger); margin-top:0; font-size: 10px; padding: 10px;" onclick="abrirModalComentariosPDF()">📥 PDF Pago Móvil</button>
+                        <button id="btn-pdf-gastos" class="btn" style="background-color:var(--gastos); margin-top:0; font-size: 10px; padding: 10px;" onclick="exportarPDFGastos()">📄 PDF Gastos</button>
+                        <button id="btn-pdf-banco" class="btn" style="background-color:#0284c7; margin-top:0; grid-column: span 2; font-size: 10px; padding: 10px;" onclick="exportarPDFBanco()">📑 PDF Registro Actividad Banco</button>
+                    </div>
+                    <button id="btn-reset" class="btn btn-reset" style="width: 100%; margin-top: 10px; font-weight: bold;" onclick="reiniciarDia()">🗑️ REINICIAR DÍA</button>
+                </div>
             </div>
         </div>
     </div>
@@ -426,6 +526,9 @@
     let editandoBsID = null;
     let sedes = [...SEDES_DEFAULT]; 
     
+    // Función para sanear nombres de sede como keys de Firebase
+    const getSafeSedeKey = (s) => s.replace(/[\.\#\$\[\]\s]/g, '_');
+
     const fmtBs = (n) => "Bs. " + n.toLocaleString('es-VE', { minimumFractionDigits: 2 });
     const fmtUsd = (n) => "$ " + n.toLocaleString('en-US', { minimumFractionDigits: 2 });
     const showLoader = (show) => document.getElementById('loader').style.display = show ? 'block' : 'none';
@@ -488,11 +591,7 @@
 
             if (currentUserProfile.role === 'admin') {
                 badge.innerText = 'Administrador'; badge.classList.add('admin');
-                document.getElementById('btn-pdf').classList.remove('hidden');
-                document.getElementById('btn-pdf-gastos').classList.remove('hidden');
-                document.getElementById('btn-reset').classList.remove('hidden');
-                document.getElementById('btn-crear-sede').classList.remove('hidden');
-                document.getElementById('btn-crear-usuario').classList.remove('hidden');
+                document.getElementById('admin-action-buttons').classList.remove('hidden');
                 document.getElementById('panel-audit-banco').classList.remove('hidden');
                 
                 document.getElementById('form-cuadre').classList.remove('disabled-panel');
@@ -502,11 +601,7 @@
                 document.getElementById('filtro-sede').disabled = false;
             } else {
                 badge.innerText = currentUserProfile.sede; badge.classList.remove('admin');
-                document.getElementById('btn-pdf').classList.add('hidden');
-                document.getElementById('btn-pdf-gastos').classList.add('hidden');
-                document.getElementById('btn-reset').classList.add('hidden');
-                document.getElementById('btn-crear-sede').classList.add('hidden');
-                document.getElementById('btn-crear-usuario').classList.add('hidden');
+                document.getElementById('admin-action-buttons').classList.add('hidden');
                 document.getElementById('panel-audit-banco').classList.add('hidden');
                 
                 document.getElementById('bs-sede').disabled = true;
@@ -514,6 +609,31 @@
                 document.getElementById('g-sede').disabled = true;
                 document.getElementById('form-cuadre').classList.add('disabled-panel');
             }
+            
+            // --- REVISAR SI HAY NOTAS DEL ADMIN PARA ESTE LOCAL ---
+            if (currentUserProfile.sede !== 'Todas') {
+                const safeSedeKey = getSafeSedeKey(currentUserProfile.sede);
+                get(ref(db, `vpm/notas_locales/${safeSedeKey}`)).then(snap => {
+                    if (snap.exists()) {
+                        const nota = snap.val();
+                        // Crear una huella unica para este mensaje para no repetirlo hoy si ya lo vio
+                        const tokenVista = `nota_vista_${btoa(nota.texto)}`; 
+                        if (!localStorage.getItem(tokenVista)) {
+                            document.getElementById('texto-nota-local').innerText = nota.texto;
+                            document.getElementById('modal-overlay').style.display = 'flex';
+                            
+                            // Asegurar que ocultamos los otros
+                            document.getElementById('modal-sede').classList.add('hidden');
+                            document.getElementById('modal-usuario').classList.add('hidden');
+                            document.getElementById('modal-pdf-comentarios').classList.add('hidden');
+                            
+                            // Mostrar solo el de notas
+                            document.getElementById('modal-nota-local').classList.remove('hidden');
+                        }
+                    }
+                });
+            }
+
             initRealtimeListeners();
         } else {
             document.getElementById('login-screen').style.display = 'flex';
@@ -522,6 +642,13 @@
             currentUserProfile = null; showLoader(false);
         }
     });
+
+    window.cerrarNotaLocal = () => {
+        const texto = document.getElementById('texto-nota-local').innerText;
+        const tokenVista = `nota_vista_${btoa(texto)}`;
+        localStorage.setItem(tokenVista, 'true');
+        cerrarModales();
+    };
 
     function initRealtimeListeners() {
         const bsRef = ref(db, 'vpm/bs');
@@ -590,6 +717,8 @@
         document.getElementById('modal-overlay').style.display = 'flex';
         document.getElementById('modal-sede').classList.remove('hidden');
         document.getElementById('modal-usuario').classList.add('hidden');
+        document.getElementById('modal-pdf-comentarios').classList.add('hidden');
+        document.getElementById('modal-nota-local').classList.add('hidden');
     };
 
     window.abrirModalUsuarios = () => {
@@ -597,10 +726,55 @@
         document.getElementById('modal-overlay').style.display = 'flex';
         document.getElementById('modal-usuario').classList.remove('hidden');
         document.getElementById('modal-sede').classList.add('hidden');
+        document.getElementById('modal-pdf-comentarios').classList.add('hidden');
+        document.getElementById('modal-nota-local').classList.add('hidden');
+    };
+
+    window.abrirModalComentariosPDF = () => {
+        if(currentUserProfile?.role !== 'admin') return;
+        const container = document.getElementById('lista-comentarios-sedes');
+        container.innerHTML = sedes.map(s => `
+            <div style="margin-bottom: 10px;">
+                <label style="font-size: 11px; color: var(--primary-dark);">${s}</label>
+                <input type="text" id="comentario-pdf-${s.replace(/\s+/g, '-')}" placeholder="Errores en cuadre, falta registrar algo, etc..." style="padding: 8px; font-size: 12px; margin-bottom: 0; background: var(--input-bg); color: var(--text-main); border-color: var(--border);">
+            </div>
+        `).join('');
+        
+        document.getElementById('modal-overlay').style.display = 'flex';
+        document.getElementById('modal-pdf-comentarios').classList.remove('hidden');
+        document.getElementById('modal-sede').classList.add('hidden');
+        document.getElementById('modal-usuario').classList.add('hidden');
+        document.getElementById('modal-nota-local').classList.add('hidden');
+    };
+
+    window.generarPDFConComentarios = () => {
+        const comentarios = {};
+        sedes.forEach(s => {
+            const input = document.getElementById(`comentario-pdf-${s.replace(/\s+/g, '-')}`);
+            const texto = input ? input.value.trim() : '';
+            comentarios[s] = texto;
+            
+            // Subir nota a Firebase si el admin escribió algo
+            if (texto) {
+                const safeSedeKey = getSafeSedeKey(s);
+                set(ref(db, `vpm/notas_locales/${safeSedeKey}`), { 
+                    texto: texto, 
+                    fecha: new Date().toLocaleDateString('es-VE'),
+                    timestamp: Date.now()
+                });
+            }
+        });
+        
+        cerrarModales();
+        exportarPDF(comentarios);
     };
 
     window.cerrarModales = () => {
         document.getElementById('modal-overlay').style.display = 'none';
+        document.getElementById('modal-sede').classList.add('hidden');
+        document.getElementById('modal-usuario').classList.add('hidden');
+        document.getElementById('modal-pdf-comentarios').classList.add('hidden');
+        document.getElementById('modal-nota-local').classList.add('hidden');
     };
 
     window.toggleSedeUsuario = () => {
@@ -749,6 +923,8 @@
                 remove(ref(db, 'vpm/cuadre'));
                 remove(ref(db, 'vpm/gastos'));
                 remove(ref(db, 'vpm/logs_banco'));
+                // Tambien podriamos limpiar las notas locales al reiniciar el dia
+                remove(ref(db, 'vpm/notas_locales'));
                 alert("✅ Base de datos reiniciada satisfactoriamente.");
             }
         }
@@ -885,7 +1061,7 @@
         `).join('');
     }
 
-    window.exportarPDF = () => {
+    window.exportarPDF = (comentarios = {}) => {
         if (currentUserProfile.role !== 'admin') return;
         if (typeof window.jspdf === 'undefined') return alert('Error crítico: La librería PDF no está disponible.');
         showLoader(true); const { jsPDF } = window.jspdf; const doc = new jsPDF();
@@ -898,10 +1074,22 @@
 
         doc.setFontSize(14); doc.setTextColor(59, 130, 246); doc.text("1. RESUMEN GENERAL POR SEDE", 14, 50);
         const resumenCuerpo = sedes.map(s => {
-            const rS = localDB.bs.filter(x => x.sede === s).reduce((a,b) => a+b.monto, 0); const pS = localDB.cuadre.filter(x => x.sede === s && x.tipo === 'Punto').reduce((a,b) => a+b.monto, 0); const uS = localDB.cuadre.filter(x => x.sede === s && x.tipo === 'Dólares').reduce((a,b) => a+b.monto, 0);
-            return [s, fmtBs(rS), fmtBs(pS), fmtUsd(uS)];
+            const rS = localDB.bs.filter(x => x.sede === s).reduce((a,b) => a+b.monto, 0); 
+            const pS = localDB.cuadre.filter(x => x.sede === s && x.tipo === 'Punto').reduce((a,b) => a+b.monto, 0); 
+            const uS = localDB.cuadre.filter(x => x.sede === s && x.tipo === 'Dólares').reduce((a,b) => a+b.monto, 0);
+            const nota = comentarios[s] || '-';
+            return [s, fmtBs(rS), fmtBs(pS), fmtUsd(uS), nota];
         });
-        doc.autoTable({ startY: 55, head: [['Sede / Local', 'Total Refs (Bs)', 'Cierre Punto (Bs)', 'Efectivo ($)']], body: resumenCuerpo, theme: 'striped', headStyles: { fillColor: [59, 130, 246], fontStyle: 'bold' }, styles: { font: 'helvetica', fontSize: 9, cellPadding: 4 }, columnStyles: { 0: { fontStyle: 'bold' } } });
+        
+        doc.autoTable({ 
+            startY: 55, 
+            head: [['Sede / Local', 'Total Refs (Bs)', 'Cierre Punto (Bs)', 'Efectivo ($)', 'Notas / Comentarios']], 
+            body: resumenCuerpo, 
+            theme: 'striped', 
+            headStyles: { fillColor: [59, 130, 246], fontStyle: 'bold' }, 
+            styles: { font: 'helvetica', fontSize: 8, cellPadding: 4 }, 
+            columnStyles: { 0: { fontStyle: 'bold' }, 4: { cellWidth: 50 } } 
+        });
         
         let finalY = doc.lastAutoTable.finalY + 15;
         doc.setFontSize(14); doc.setTextColor(16, 185, 129); doc.text("2. DETALLE DE TRANSACCIONES PAGOMOVIL (BS)", 14, finalY);
@@ -962,6 +1150,36 @@
             headStyles: { fillColor: [217, 119, 6] }, 
             styles: { font: 'helvetica', fontSize: 8 }, 
             columnStyles: { 4: { halign: 'right', fontStyle: 'bold' } } 
+        });
+
+        showLoader(false); window.open(doc.output('bloburl'), '_blank');
+    };
+
+    window.exportarPDFBanco = () => {
+        if (currentUserProfile.role !== 'admin') return;
+        if (typeof window.jspdf === 'undefined') return alert('Error crítico: La librería PDF no está disponible.');
+        showLoader(true); const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        
+        doc.setFont("helvetica", "bold"); doc.setFontSize(20); doc.setTextColor(30, 41, 59); doc.text("VPM - REPORTE ACTIVIDAD DE BANCO", 14, 22);
+        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100); 
+        doc.text(`Fecha y Hora de emisión: ${new Date().toLocaleString('es-VE')}`, 14, 30); 
+        doc.text(`Generado por: ${auth.currentUser.email}`, 14, 35);
+        doc.setDrawColor(226, 232, 240); doc.line(14, 40, 196, 40);
+
+        doc.setFontSize(14); doc.setTextColor(2, 132, 199); 
+        doc.text("REGISTRO DE ACCESOS AL BANCO", 14, 50);
+
+        const logsCuerpo = localDB.logs_banco.map(log => {
+            return [log.fecha, log.hora, log.usuario];
+        });
+
+        doc.autoTable({ 
+            startY: 55, 
+            head: [['Fecha', 'Hora', 'Usuario (Correo)']], 
+            body: logsCuerpo, 
+            theme: 'grid', 
+            headStyles: { fillColor: [2, 132, 199] }, 
+            styles: { font: 'helvetica', fontSize: 9 }
         });
 
         showLoader(false); window.open(doc.output('bloburl'), '_blank');
