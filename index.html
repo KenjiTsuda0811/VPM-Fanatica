@@ -281,13 +281,25 @@
     
     <div id="modal-actualizacion" class="modal-box hidden">
         <h2 style="margin-top:0; color: var(--info); font-size: 22px;">🚀 ¡Nueva Actualización!</h2>
-        <p style="font-size: 14px; color: var(--text-main); margin-bottom: 15px; font-weight: 600;">Hemos mejorado VPM con las siguientes novedades:</p>
-        <ul class="novedades-lista">
-            <li><b>BCV:</b> Ahora la tasa BCV sera visible desde el VPM.</li>
-            <li><b>Optimización:</b> Mejoras estructurales para mayor fluidez de la página.</li>
-            <li><b>Conectividad:</b> Mejora general en el ecosistema VPM.</li>
-        </ul>
+        <div id="texto-actualizacion-dinamico">
+            <p style="font-size: 14px; color: var(--text-main); margin-bottom: 15px; font-weight: 600;">Hemos mejorado VPM con las siguientes novedades:</p>
+            <ul class="novedades-lista">
+                <li><b>Modo Oscuro:</b> Ahora puedes cambiar el tema de la página usando el botón en la parte superior derecha.</li>
+                <li><b>Gastos y Pagos:</b> Habilitación total del módulo de gastos y pagos para un control más detallado.</li>
+                <li><b>Optimización:</b> Mejoras estructurales para mayor velocidad y fluidez de la página.</li>
+                <li><b>Conectividad:</b> Mejora general en la estabilidad y conexión con la base de datos en la nube.</li>
+            </ul>
+        </div>
         <button class="btn" style="background-color:var(--success); font-size: 15px;" onclick="cerrarModalActualizacion()">¡Entendido!</button>
+    </div>
+
+    <div id="modal-lanzar-update" class="modal-box hidden">
+        <button class="modal-close" onclick="cerrarModales()">✖</button>
+        <h2 style="margin-top:0; font-size: 20px;">🚀 Publicar Actualización</h2>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">Escribe las notas del parche. Esto lanzará un aviso global e inmediato a todos los usuarios en el sistema.</p>
+        <label>Detalles de la Actualización (Cada línea será una viñeta)</label>
+        <textarea id="update-texto-admin" rows="6" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); resize: none; margin-bottom: 15px; font-family: var(--body-font); font-size: 13px;" placeholder="- Se arregló el bug del cuadre...&#10;- Nueva función añadida..."></textarea>
+        <button class="btn" style="background-color: var(--accent);" onclick="enviarActualizacionFirebase()">Enviar a Todos</button>
     </div>
 
     <div id="modal-sede" class="modal-box hidden">
@@ -503,7 +515,8 @@
                         <button id="btn-crear-usuario" class="btn" style="background-color:#4f46e5; font-size: 10px; padding: 10px; margin-top:0;" onclick="abrirModalUsuarios()">👥 Crear Usuario</button>
                         <button id="btn-pdf" class="btn" style="background-color:var(--danger); margin-top:0; font-size: 10px; padding: 10px;" onclick="abrirModalComentariosPDF()">📥 PDF Pago Móvil</button>
                         <button id="btn-pdf-gastos" class="btn" style="background-color:var(--gastos); margin-top:0; font-size: 10px; padding: 10px;" onclick="exportarPDFGastos()">📄 PDF Gastos</button>
-                        <button id="btn-pdf-banco" class="btn" style="background-color:#0284c7; margin-top:0; grid-column: span 2; font-size: 10px; padding: 10px;" onclick="exportarPDFBanco()">📑 PDF Registro Actividad Banco</button>
+                        <button id="btn-broadcast-update" class="btn" style="background-color:var(--accent); margin-top:0; font-size: 10px; padding: 10px;" onclick="abrirModalLanzarActualizacion()">🚀 Publicar Actualización</button>
+                        <button id="btn-pdf-banco" class="btn" style="background-color:#0284c7; margin-top:0; font-size: 10px; padding: 10px;" onclick="exportarPDFBanco()">📑 PDF Registro Actividad Banco</button>
                     </div>
                     <button id="btn-reset" class="btn btn-reset" style="width: 100%; margin-top: 10px; font-weight: bold;" onclick="reiniciarDia()">🗑️ REINICIAR DÍA</button>
                 </div>
@@ -513,14 +526,12 @@
 </div>
 
 <script type="module">
-    /* --- INTEGRACIÓN DE BYPASS ADMINISTRADOR --- */
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('admin_override') === 'true') {
         sessionStorage.setItem('admin_override', 'true');
         window.history.replaceState({}, document.title, window.location.pathname); 
     }
 
-    /* --- LÓGICA DE CIERRE AUTOMÁTICO (HORA VENEZUELA UTC-4) --- */
     function verificarCierre() {
         if (sessionStorage.getItem('admin_override') === 'true') return;
 
@@ -528,17 +539,14 @@
         const opciones = { timeZone: 'America/Caracas', hour12: false, hour: '2-digit', minute: '2-digit' };
         const horaVE = new Intl.DateTimeFormat('es-VE', opciones).format(ahora);
         
-        // Cierre: 7:00 PM (19:00) hasta Apertura: 9:00 AM (09:00)
-        // Bloqueamos si es >= 19:00 O si es < 08:00 (Ajustado según tu código de Stop.html)
         if (horaVE >= "20:00" || horaVE < "08:00") {
             window.location.href = "Stop.html";
         }
     }
 
     verificarCierre(); 
-    setInterval(verificarCierre, 60000); // Revisión cada minuto
+    setInterval(verificarCierre, 60000);
 
-    /* --- INTEGRACIÓN API TASA BCV --- */
     async function cargarTasaBCV() {
         try {
             const reqUsd = await fetch('https://ve.dolarapi.com/v1/dolares/oficial');
@@ -554,7 +562,6 @@
         }
     }
 
-    /* --- INICIO CÓDIGO FIREBASE --- */
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import { getDatabase, ref, push, set, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
@@ -618,7 +625,7 @@
     };
 
     window.cerrarSesion = () => {
-        sessionStorage.removeItem('admin_override'); // Limpiar el bypass al salir
+        sessionStorage.removeItem('admin_override'); 
         signOut(auth);
     };
 
@@ -637,6 +644,7 @@
                         document.getElementById('modal-pdf-comentarios').classList.add('hidden');
                         document.getElementById('modal-actualizacion').classList.add('hidden');
                         document.getElementById('modal-enviar-mensaje').classList.add('hidden');
+                        document.getElementById('modal-lanzar-update').classList.add('hidden');
                         document.getElementById('modal-nota-local').classList.remove('hidden');
                     }
                 }
@@ -685,7 +693,6 @@
                 document.getElementById('admin-action-buttons').classList.remove('hidden');
                 document.getElementById('panel-audit-banco').classList.remove('hidden');
                 
-                // Activar Mensajería y Bypass de Horario permanente para admin en sesión
                 document.getElementById('btn-msg-admin').classList.remove('hidden');
                 sessionStorage.setItem('admin_override', 'true');
                 
@@ -695,7 +702,6 @@
                 document.getElementById('g-sede').disabled = false;
                 document.getElementById('filtro-sede').disabled = false;
             } else {
-                // Validación estricta por si un usuario entró en horario no permitido
                 const ahora = new Date();
                 const opciones = { timeZone: 'America/Caracas', hour12: false, hour: '2-digit', minute: '2-digit' };
                 const horaVE = new Intl.DateTimeFormat('es-VE', opciones).format(ahora);
@@ -715,12 +721,11 @@
                 document.getElementById('form-cuadre').classList.add('disabled-panel');
             }
             
-            // --- CARGAR BARRA BCV Y REVELAR ---
             document.getElementById('bcv-bar').classList.remove('hidden');
             cargarTasaBCV();
-            escucharMensajesSistema(); // Activar escucha de mensajes
+            escucharMensajesSistema(); 
+            escucharActualizacionGlobal(); 
             
-            // --- MOSTRAR ACTUALIZACIÓN O NOTA LOCAL ---
             if (!localStorage.getItem('vpm-update-v1-seen')) {
                 document.getElementById('modal-overlay').style.display = 'flex';
                 document.getElementById('modal-sede').classList.add('hidden');
@@ -728,6 +733,7 @@
                 document.getElementById('modal-pdf-comentarios').classList.add('hidden');
                 document.getElementById('modal-nota-local').classList.add('hidden');
                 document.getElementById('modal-enviar-mensaje').classList.add('hidden');
+                document.getElementById('modal-lanzar-update').classList.add('hidden');
                 document.getElementById('modal-actualizacion').classList.remove('hidden');
             } else {
                 verificarNotasLocales();
@@ -744,7 +750,12 @@
     });
 
     window.cerrarModalActualizacion = () => {
-        localStorage.setItem('vpm-update-v1-seen', 'true');
+        if(window.updateVersionPendiente) {
+            localStorage.setItem('vpm_update_version', window.updateVersionPendiente);
+            window.updateVersionPendiente = null;
+        } else {
+            localStorage.setItem('vpm-update-v1-seen', 'true');
+        }
         cerrarModales();
         verificarNotasLocales(); 
     };
@@ -756,19 +767,74 @@
         cerrarModales();
     };
 
-    /* --- INTEGRACIÓN: LÓGICA DE MENSAJERÍA ADMIN --- */
+    // --- NUEVO SISTEMA: ACTUALIZACIONES GLOBALES DINÁMICAS ---
+    window.abrirModalLanzarActualizacion = () => {
+        if(currentUserProfile?.role !== 'admin') return;
+        document.getElementById('modal-overlay').style.display = 'flex';
+        const modales = document.querySelectorAll('.modal-box');
+        modales.forEach(m => m.classList.add('hidden'));
+        document.getElementById('modal-lanzar-update').classList.remove('hidden');
+    };
+
+    window.enviarActualizacionFirebase = async () => {
+        const texto = document.getElementById('update-texto-admin').value.trim();
+        if(!texto) return alert("Por favor escribe el mensaje de actualización.");
+        
+        showLoader(true);
+        try {
+            await set(ref(db, 'vpm/sistema/actualizacion_actual'), {
+                version: Date.now(),
+                texto: texto,
+                autor: auth.currentUser.email
+            });
+            alert("🚀 Actualización publicada. Llegará a todos los usuarios.");
+            document.getElementById('update-texto-admin').value = '';
+            cerrarModales();
+        } catch (e) {
+            alert("Error: " + e.message);
+        }
+        showLoader(false);
+    };
+
+    function escucharActualizacionGlobal() {
+        onValue(ref(db, 'vpm/sistema/actualizacion_actual'), (snap) => {
+            if (!snap.exists()) return;
+            const data = snap.val();
+            const versionStr = data.version.toString();
+            
+            if (localStorage.getItem('vpm_update_version') !== versionStr) {
+                // Formatear líneas en una lista
+                const lineas = data.texto.split('\n').filter(l => l.trim() !== '');
+                const htmlLista = lineas.map(l => {
+                    // Quitar guión al inicio si el usuario lo pone manual
+                    const lLimpia = l.replace(/^-\s*/, '');
+                    return `<li>${lLimpia}</li>`;
+                }).join('');
+                
+                document.getElementById('texto-actualizacion-dinamico').innerHTML = `<ul class="novedades-lista">${htmlLista}</ul>`;
+                
+                // Mostrar alerta
+                document.getElementById('modal-overlay').style.display = 'flex';
+                const modales = document.querySelectorAll('.modal-box');
+                modales.forEach(m => m.classList.add('hidden'));
+                document.getElementById('modal-actualizacion').classList.remove('hidden');
+                
+                // Setear variable temporal para guardar en localStorage al hacer click en Entendido
+                window.updateVersionPendiente = versionStr;
+            }
+        });
+    }
+
+    // --- SISTEMA MENSAJERÍA ADMIN ---
     window.abrirModalMensajeAdmin = () => {
         if(currentUserProfile?.role !== 'admin') return;
         const htmlDestinos = `<option value="Todas">Todas las Sedes</option>` + sedes.map(s => `<option value="${s}">${s}</option>`).join('');
         document.getElementById('msg-destino-admin').innerHTML = htmlDestinos;
         
         document.getElementById('modal-overlay').style.display = 'flex';
+        const modales = document.querySelectorAll('.modal-box');
+        modales.forEach(m => m.classList.add('hidden'));
         document.getElementById('modal-enviar-mensaje').classList.remove('hidden');
-        document.getElementById('modal-sede').classList.add('hidden');
-        document.getElementById('modal-usuario').classList.add('hidden');
-        document.getElementById('modal-pdf-comentarios').classList.add('hidden');
-        document.getElementById('modal-nota-local').classList.add('hidden');
-        document.getElementById('modal-actualizacion').classList.add('hidden');
     };
 
     window.enviarMensajeAdmin = async () => {
@@ -880,23 +946,17 @@
     window.abrirModalSedes = () => {
         if(currentUserProfile?.role !== 'admin') return;
         document.getElementById('modal-overlay').style.display = 'flex';
+        const modales = document.querySelectorAll('.modal-box');
+        modales.forEach(m => m.classList.add('hidden'));
         document.getElementById('modal-sede').classList.remove('hidden');
-        document.getElementById('modal-usuario').classList.add('hidden');
-        document.getElementById('modal-pdf-comentarios').classList.add('hidden');
-        document.getElementById('modal-nota-local').classList.add('hidden');
-        document.getElementById('modal-actualizacion').classList.add('hidden');
-        document.getElementById('modal-enviar-mensaje').classList.add('hidden');
     };
 
     window.abrirModalUsuarios = () => {
         if(currentUserProfile?.role !== 'admin') return;
         document.getElementById('modal-overlay').style.display = 'flex';
+        const modales = document.querySelectorAll('.modal-box');
+        modales.forEach(m => m.classList.add('hidden'));
         document.getElementById('modal-usuario').classList.remove('hidden');
-        document.getElementById('modal-sede').classList.add('hidden');
-        document.getElementById('modal-pdf-comentarios').classList.add('hidden');
-        document.getElementById('modal-nota-local').classList.add('hidden');
-        document.getElementById('modal-actualizacion').classList.add('hidden');
-        document.getElementById('modal-enviar-mensaje').classList.add('hidden');
     };
 
     window.abrirModalComentariosPDF = () => {
@@ -910,12 +970,9 @@
         `).join('');
         
         document.getElementById('modal-overlay').style.display = 'flex';
+        const modales = document.querySelectorAll('.modal-box');
+        modales.forEach(m => m.classList.add('hidden'));
         document.getElementById('modal-pdf-comentarios').classList.remove('hidden');
-        document.getElementById('modal-sede').classList.add('hidden');
-        document.getElementById('modal-usuario').classList.add('hidden');
-        document.getElementById('modal-nota-local').classList.add('hidden');
-        document.getElementById('modal-actualizacion').classList.add('hidden');
-        document.getElementById('modal-enviar-mensaje').classList.add('hidden');
     };
 
     window.generarPDFConComentarios = () => {
@@ -941,12 +998,8 @@
 
     window.cerrarModales = () => {
         document.getElementById('modal-overlay').style.display = 'none';
-        document.getElementById('modal-sede').classList.add('hidden');
-        document.getElementById('modal-usuario').classList.add('hidden');
-        document.getElementById('modal-pdf-comentarios').classList.add('hidden');
-        document.getElementById('modal-nota-local').classList.add('hidden');
-        document.getElementById('modal-actualizacion').classList.add('hidden');
-        document.getElementById('modal-enviar-mensaje').classList.add('hidden');
+        const modales = document.querySelectorAll('.modal-box');
+        modales.forEach(m => m.classList.add('hidden'));
     };
 
     window.toggleSedeUsuario = () => {
@@ -1204,7 +1257,6 @@
         else { alert("No se reconoció el formato de Banesco."); }
     }
 
-    // --- LÓGICA AUDITORÍA BANCO ---
     window.abrirBanco = () => { 
         const userEmail = auth.currentUser.email;
         const ahora = new Date();
