@@ -13,7 +13,7 @@
             --primary-dark: #0f172a;
             --accent-blue: #2563eb;
             --accent-glow: #3b82f6;
-            --accent-purple: #8b5cf6; /* Color para destacar "Belleza" */
+            --accent-purple: #8b5cf6; 
             --text-main: #0f172a; 
             --text-body: #334155; 
             --body-font: 'Montserrat', sans-serif;
@@ -33,7 +33,6 @@
             overflow: hidden;
         }
 
-        /* --- CONTENEDOR PRINCIPAL --- */
         .login-box {
             background: #ffffff;
             padding: 45px 35px;
@@ -70,7 +69,6 @@
             margin-bottom: 30px;
         }
 
-        /* --- BARRA DE CARGA --- */
         .loader-container {
             width: 100%;
             margin-bottom: 35px;
@@ -99,7 +97,6 @@
             box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
         }
 
-        /* --- TARJETAS DE INFORMACIÓN --- */
         .info-card {
             background: #f8fafc;
             border: 2px solid #f1f5f9;
@@ -119,7 +116,6 @@
             background: #fff;
         }
 
-        /* Estilo especial para la tarjeta de pendiente */
         .info-card.pending {
             border-left: 5px solid var(--accent-purple);
         }
@@ -165,7 +161,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* --- FOOTER --- */
         .footer {
             position: absolute;
             bottom: 20px;
@@ -176,7 +171,6 @@
         }
         .footer strong { color: #f1f5f9; }
 
-        /* --- ANIMACIONES --- */
         @keyframes loadingMove {
             0% { left: -50%; }
             100% { left: 110%; }
@@ -238,6 +232,15 @@
                 <p>Para validación de pagos móviles y ayuda.</p>
             </div>
         </div>
+
+        <div class="info-card" style="cursor: pointer; border: 2px solid transparent;" onmouseover="this.style.borderColor='var(--accent-purple)'" onmouseout="this.style.borderColor='transparent'" onclick="window.location.href='index.html?admin_override=true'">
+            <div class="icon-box" style="background:#f5f3ff; color:var(--accent-purple);">🔐</div>
+            <div class="info-text">
+                <strong>Acceso Administrador</strong>
+                <p>Entrar al sistema evadiendo el horario.</p>
+            </div>
+        </div>
+
     </div>
 
     <div class="footer">
