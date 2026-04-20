@@ -117,7 +117,7 @@
             font-size: 11px;
             font-weight: 800;
             position: absolute;
-            right: 165px; /* Ajustado para apuntar exactamente al botón de la luna/sol */
+            right: 165px; 
             white-space: nowrap;
             animation: bounceX 1.5s infinite;
             pointer-events: none;
@@ -243,7 +243,7 @@
             .top-nav { flex-direction: column; align-items: stretch; gap: 10px; }
             .btn-logout { width: 100%; }
             .filtros-grid { grid-template-columns: 1fr; }
-            .hint-bounce { right: 20px; top: 50px; } /* Ajuste responsive de flecha */
+            .hint-bounce { right: 20px; top: 50px; } 
         }
     </style>
     
@@ -283,10 +283,9 @@
         <h2 style="margin-top:0; color: var(--info); font-size: 22px;">🚀 ¡Nueva Actualización!</h2>
         <p style="font-size: 14px; color: var(--text-main); margin-bottom: 15px; font-weight: 600;">Hemos mejorado VPM con las siguientes novedades:</p>
         <ul class="novedades-lista">
-            <li><b>Modo Oscuro:</b> Ahora puedes cambiar el tema de la página usando el botón en la parte superior derecha.</li>
-            <li><b>Gastos y Pagos:</b> Habilitación total del módulo de gastos y pagos para un control más detallado.</li>
-            <li><b>Optimización:</b> Mejoras estructurales para mayor velocidad y fluidez de la página.</li>
-            <li><b>Conectividad:</b> Mejora general en la estabilidad y conexión con la base de datos en la nube.</li>
+            <li><b>BCV:</b> Ahora la tasa BCV sera visible desde el VPM.</li>
+            <li><b>Optimización:</b> Mejoras estructurales para mayor fluidez de la página.</li>
+            <li><b>Conectividad:</b> Mejora general en el ecosistema VPM.</li>
         </ul>
         <button class="btn" style="background-color:var(--success); font-size: 15px;" onclick="cerrarModalActualizacion()">¡Entendido!</button>
     </div>
@@ -333,6 +332,18 @@
         <p id="texto-nota-local" style="font-size: 14px; font-weight: 700; color: var(--danger); line-height: 1.5; padding: 15px; background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: 8px; text-align: left;"></p>
         <button class="btn" style="background-color:var(--info); margin-top: 15px;" onclick="cerrarNotaLocal()">Entendido</button>
     </div>
+    
+    <div id="modal-enviar-mensaje" class="modal-box hidden">
+        <button class="modal-close" onclick="cerrarModales()">✖</button>
+        <h2 style="margin-top:0; font-size: 20px;">✉️ Enviar Mensaje Global</h2>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">El mensaje aparecerá como alerta emergente en la sede seleccionada.</p>
+        <label>Destino (Sede)</label>
+        <select id="msg-destino-admin"></select>
+        <label>Mensaje</label>
+        <textarea id="msg-texto-admin" rows="4" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-family: var(--body-font); font-size: 13px; margin-bottom: 15px; background: var(--input-bg); color: var(--text-main); resize: none; box-sizing: border-box;"></textarea>
+        <button class="btn" style="background-color: var(--info);" onclick="enviarMensajeAdmin()">Enviar Mensaje a Sede</button>
+    </div>
+
 </div>
 
 <div id="login-screen">
@@ -369,11 +380,23 @@
     </div>
     <div style="display: flex; gap: 10px; position: relative; align-items: center;">
         <div id="dark-mode-hint" class="hint-bounce">Activa aqui el modo oscuro ➡️</div>
+        
+        <button id="btn-msg-admin" class="btn-logout hidden" onclick="abrirModalMensajeAdmin()" style="background-color: var(--info); color: white; border: none;">✉️ Mensaje Global</button>
+        
         <button id="btn-theme" class="btn-logout" style="padding: 8px 12px; font-size: 14px;" onclick="toggleDarkMode()" title="Cambiar Tema">
             <span id="theme-icon">🌙</span>
         </button>
         <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión 👋</button>
     </div>
+</div>
+
+<div id="bcv-bar" class="hidden" style="background: var(--surface); color: var(--text-main); padding: 12px 25px; font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+    <div style="display:flex; align-items:center; gap: 15px;">
+        <span style="background: var(--success); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase;">Tasa Oficial BCV</span>
+        <span id="tasa-bcv-usd">Cargando USD...</span>
+        <span id="tasa-bcv-eur">Cargando EUR...</span>
+    </div>
+    <span style="font-size: 11px; color: var(--text-muted);">Actualizado desde bcv.org.ve</span>
 </div>
 
 <div id="app-layout">
@@ -490,21 +513,46 @@
 </div>
 
 <script type="module">
+    /* --- INTEGRACIÓN DE BYPASS ADMINISTRADOR --- */
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('admin_override') === 'true') {
+        sessionStorage.setItem('admin_override', 'true');
+        window.history.replaceState({}, document.title, window.location.pathname); 
+    }
+
     /* --- LÓGICA DE CIERRE AUTOMÁTICO (HORA VENEZUELA UTC-4) --- */
     function verificarCierre() {
+        if (sessionStorage.getItem('admin_override') === 'true') return;
+
         const ahora = new Date();
         const opciones = { timeZone: 'America/Caracas', hour12: false, hour: '2-digit', minute: '2-digit' };
         const horaVE = new Intl.DateTimeFormat('es-VE', opciones).format(ahora);
         
         // Cierre: 7:00 PM (19:00) hasta Apertura: 9:00 AM (09:00)
-        // Bloqueamos si es >= 19:00 O si es < 09:30
+        // Bloqueamos si es >= 19:00 O si es < 08:00 (Ajustado según tu código de Stop.html)
         if (horaVE >= "20:00" || horaVE < "08:00") {
-            window.location.href = "stop.html";
+            window.location.href = "Stop.html";
         }
     }
 
     verificarCierre(); 
     setInterval(verificarCierre, 60000); // Revisión cada minuto
+
+    /* --- INTEGRACIÓN API TASA BCV --- */
+    async function cargarTasaBCV() {
+        try {
+            const reqUsd = await fetch('https://ve.dolarapi.com/v1/dolares/oficial');
+            const dataUsd = await reqUsd.json();
+            document.getElementById('tasa-bcv-usd').innerText = `USD: Bs. ${dataUsd.promedio.toFixed(2)}`;
+
+            const reqEur = await fetch('https://ve.dolarapi.com/v1/euros/oficial');
+            const dataEur = await reqEur.json();
+            document.getElementById('tasa-bcv-eur').innerText = `EUR: Bs. ${dataEur.promedio.toFixed(2)}`;
+        } catch (e) {
+            document.getElementById('tasa-bcv-usd').innerText = `USD: Error de conexión`;
+            document.getElementById('tasa-bcv-eur').innerText = `EUR: Error de conexión`;
+        }
+    }
 
     /* --- INICIO CÓDIGO FIREBASE --- */
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
@@ -545,7 +593,6 @@
     let editandoBsID = null;
     let sedes = [...SEDES_DEFAULT]; 
     
-    // Función para sanear nombres de sede como keys de Firebase
     const getSafeSedeKey = (s) => s.replace(/[\.\#\$\[\]\s]/g, '_');
 
     const fmtBs = (n) => "Bs. " + n.toLocaleString('es-VE', { minimumFractionDigits: 2 });
@@ -570,9 +617,11 @@
         });
     };
 
-    window.cerrarSesion = () => signOut(auth);
+    window.cerrarSesion = () => {
+        sessionStorage.removeItem('admin_override'); // Limpiar el bypass al salir
+        signOut(auth);
+    };
 
-    // Función separada para verificar notas locales y no sobreponer modales
     function verificarNotasLocales() {
         if (currentUserProfile && currentUserProfile.sede !== 'Todas') {
             const safeSedeKey = getSafeSedeKey(currentUserProfile.sede);
@@ -587,6 +636,7 @@
                         document.getElementById('modal-usuario').classList.add('hidden');
                         document.getElementById('modal-pdf-comentarios').classList.add('hidden');
                         document.getElementById('modal-actualizacion').classList.add('hidden');
+                        document.getElementById('modal-enviar-mensaje').classList.add('hidden');
                         document.getElementById('modal-nota-local').classList.remove('hidden');
                     }
                 }
@@ -635,12 +685,26 @@
                 document.getElementById('admin-action-buttons').classList.remove('hidden');
                 document.getElementById('panel-audit-banco').classList.remove('hidden');
                 
+                // Activar Mensajería y Bypass de Horario permanente para admin en sesión
+                document.getElementById('btn-msg-admin').classList.remove('hidden');
+                sessionStorage.setItem('admin_override', 'true');
+                
                 document.getElementById('form-cuadre').classList.remove('disabled-panel');
                 document.getElementById('bs-sede').disabled = false;
                 document.getElementById('c-sede').disabled = false;
                 document.getElementById('g-sede').disabled = false;
                 document.getElementById('filtro-sede').disabled = false;
             } else {
+                // Validación estricta por si un usuario entró en horario no permitido
+                const ahora = new Date();
+                const opciones = { timeZone: 'America/Caracas', hour12: false, hour: '2-digit', minute: '2-digit' };
+                const horaVE = new Intl.DateTimeFormat('es-VE', opciones).format(ahora);
+                if (horaVE >= "20:00" || horaVE < "08:00") {
+                    signOut(auth);
+                    window.location.href = "Stop.html";
+                    return;
+                }
+
                 badge.innerText = currentUserProfile.sede; badge.classList.remove('admin');
                 document.getElementById('admin-action-buttons').classList.add('hidden');
                 document.getElementById('panel-audit-banco').classList.add('hidden');
@@ -651,6 +715,11 @@
                 document.getElementById('form-cuadre').classList.add('disabled-panel');
             }
             
+            // --- CARGAR BARRA BCV Y REVELAR ---
+            document.getElementById('bcv-bar').classList.remove('hidden');
+            cargarTasaBCV();
+            escucharMensajesSistema(); // Activar escucha de mensajes
+            
             // --- MOSTRAR ACTUALIZACIÓN O NOTA LOCAL ---
             if (!localStorage.getItem('vpm-update-v1-seen')) {
                 document.getElementById('modal-overlay').style.display = 'flex';
@@ -658,6 +727,7 @@
                 document.getElementById('modal-usuario').classList.add('hidden');
                 document.getElementById('modal-pdf-comentarios').classList.add('hidden');
                 document.getElementById('modal-nota-local').classList.add('hidden');
+                document.getElementById('modal-enviar-mensaje').classList.add('hidden');
                 document.getElementById('modal-actualizacion').classList.remove('hidden');
             } else {
                 verificarNotasLocales();
@@ -667,6 +737,7 @@
         } else {
             document.getElementById('login-screen').style.display = 'flex';
             document.getElementById('top-bar').classList.add('hidden');
+            document.getElementById('bcv-bar').classList.add('hidden');
             document.getElementById('app-layout').style.display = 'none';
             currentUserProfile = null; showLoader(false);
         }
@@ -675,7 +746,7 @@
     window.cerrarModalActualizacion = () => {
         localStorage.setItem('vpm-update-v1-seen', 'true');
         cerrarModales();
-        verificarNotasLocales(); // Revisa si hay notas de inmediato tras cerrar novedades
+        verificarNotasLocales(); 
     };
 
     window.cerrarNotaLocal = () => {
@@ -684,6 +755,65 @@
         localStorage.setItem(tokenVista, 'true');
         cerrarModales();
     };
+
+    /* --- INTEGRACIÓN: LÓGICA DE MENSAJERÍA ADMIN --- */
+    window.abrirModalMensajeAdmin = () => {
+        if(currentUserProfile?.role !== 'admin') return;
+        const htmlDestinos = `<option value="Todas">Todas las Sedes</option>` + sedes.map(s => `<option value="${s}">${s}</option>`).join('');
+        document.getElementById('msg-destino-admin').innerHTML = htmlDestinos;
+        
+        document.getElementById('modal-overlay').style.display = 'flex';
+        document.getElementById('modal-enviar-mensaje').classList.remove('hidden');
+        document.getElementById('modal-sede').classList.add('hidden');
+        document.getElementById('modal-usuario').classList.add('hidden');
+        document.getElementById('modal-pdf-comentarios').classList.add('hidden');
+        document.getElementById('modal-nota-local').classList.add('hidden');
+        document.getElementById('modal-actualizacion').classList.add('hidden');
+    };
+
+    window.enviarMensajeAdmin = async () => {
+        const destino = document.getElementById('msg-destino-admin').value;
+        const texto = document.getElementById('msg-texto-admin').value;
+        
+        if (!texto) return alert("Escriba un mensaje para enviar.");
+        
+        showLoader(true);
+        try {
+            await push(ref(db, 'vpm/mensajes_sistema'), {
+                destino: destino,
+                texto: texto,
+                timestamp: Date.now(),
+                autor: auth.currentUser.email
+            });
+            alert("✅ Mensaje enviado exitosamente.");
+            document.getElementById('msg-texto-admin').value = '';
+            cerrarModales();
+        } catch (error) {
+            alert("Error al enviar: " + error.message);
+        }
+        showLoader(false);
+    };
+
+    function escucharMensajesSistema() {
+        onValue(ref(db, 'vpm/mensajes_sistema'), (snap) => {
+            if (!snap.exists() || !currentUserProfile) return;
+            const mensajes = [];
+            snap.forEach(child => mensajes.push({ id: child.key, ...child.val() }));
+            
+            const miSede = currentUserProfile.sede;
+            const mensajesParaMi = mensajes.filter(m => m.destino === 'Todas' || m.destino === miSede);
+            
+            if (mensajesParaMi.length > 0) {
+                const ultimoMsg = mensajesParaMi[mensajesParaMi.length - 1];
+                const tokenLeido = `msg_leido_${ultimoMsg.id}`;
+                
+                if (!localStorage.getItem(tokenLeido)) {
+                    alert(`📢 MENSAJE DE ADMINISTRACIÓN\nDe: ${ultimoMsg.autor}\n\n${ultimoMsg.texto}`);
+                    localStorage.setItem(tokenLeido, 'true');
+                }
+            }
+        });
+    }
 
     function initRealtimeListeners() {
         const bsRef = ref(db, 'vpm/bs');
@@ -755,6 +885,7 @@
         document.getElementById('modal-pdf-comentarios').classList.add('hidden');
         document.getElementById('modal-nota-local').classList.add('hidden');
         document.getElementById('modal-actualizacion').classList.add('hidden');
+        document.getElementById('modal-enviar-mensaje').classList.add('hidden');
     };
 
     window.abrirModalUsuarios = () => {
@@ -765,6 +896,7 @@
         document.getElementById('modal-pdf-comentarios').classList.add('hidden');
         document.getElementById('modal-nota-local').classList.add('hidden');
         document.getElementById('modal-actualizacion').classList.add('hidden');
+        document.getElementById('modal-enviar-mensaje').classList.add('hidden');
     };
 
     window.abrirModalComentariosPDF = () => {
@@ -783,6 +915,7 @@
         document.getElementById('modal-usuario').classList.add('hidden');
         document.getElementById('modal-nota-local').classList.add('hidden');
         document.getElementById('modal-actualizacion').classList.add('hidden');
+        document.getElementById('modal-enviar-mensaje').classList.add('hidden');
     };
 
     window.generarPDFConComentarios = () => {
@@ -792,7 +925,6 @@
             const texto = input ? input.value.trim() : '';
             comentarios[s] = texto;
             
-            // Subir nota a Firebase si el admin escribió algo
             if (texto) {
                 const safeSedeKey = getSafeSedeKey(s);
                 set(ref(db, `vpm/notas_locales/${safeSedeKey}`), { 
@@ -814,6 +946,7 @@
         document.getElementById('modal-pdf-comentarios').classList.add('hidden');
         document.getElementById('modal-nota-local').classList.add('hidden');
         document.getElementById('modal-actualizacion').classList.add('hidden');
+        document.getElementById('modal-enviar-mensaje').classList.add('hidden');
     };
 
     window.toggleSedeUsuario = () => {
@@ -1073,7 +1206,6 @@
 
     // --- LÓGICA AUDITORÍA BANCO ---
     window.abrirBanco = () => { 
-        // Registrar evento en Firebase
         const userEmail = auth.currentUser.email;
         const ahora = new Date();
         const fecha = ahora.toLocaleDateString('es-VE');
