@@ -291,10 +291,6 @@
         <div id="texto-actualizacion-dinamico">
             <p style="font-size: 14px; color: var(--text-main); margin-bottom: 15px; font-weight: 600;">Hemos mejorado VPM con las siguientes novedades:</p>
             <ul class="novedades-lista">
-                <li><b>Modo Oscuro:</b> Ahora puedes cambiar el tema de la página usando el botón en la parte superior derecha.</li>
-                <li><b>Gastos y Pagos:</b> Habilitación total del módulo de gastos y pagos para un control más detallado.</li>
-                <li><b>Optimización:</b> Mejoras estructurales para mayor velocidad y fluidez de la página.</li>
-                <li><b>Conectividad:</b> Mejora general en la estabilidad y conexión con la base de datos en la nube.</li>
             </ul>
         </div>
         <button class="btn" style="background-color:var(--success); font-size: 15px;" onclick="cerrarModalActualizacion()">¡Entendido!</button>
@@ -547,7 +543,7 @@
         const opciones = { timeZone: 'America/Caracas', hour12: false, hour: '2-digit', minute: '2-digit' };
         const horaVE = new Intl.DateTimeFormat('es-VE', opciones).format(ahora);
         
-        if (horaVE >= "20:00" || horaVE < "08:00") {
+        if (horaVE >= "20:00" || horaVE < "09:00") {
             window.location.href = "Stop.html";
         }
     }
