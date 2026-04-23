@@ -543,7 +543,7 @@
         const opciones = { timeZone: 'America/Caracas', hour12: false, hour: '2-digit', minute: '2-digit' };
         const horaVE = new Intl.DateTimeFormat('es-VE', opciones).format(ahora);
         
-        if (horaVE >= "20:00" || horaVE < "08:00") {
+        if (horaVE >= "20:00" || horaVE < "09:00") {
             window.location.href = "Stop.html";
         }
     }
